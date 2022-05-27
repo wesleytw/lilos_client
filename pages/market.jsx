@@ -1,11 +1,11 @@
-// import Head from "next/head"
+import Head from "next/head"
 // import { shortenAddress } from "../src/utils/shortenAddress";
 // import { useMoralis, useNFTBalances, useWeb3ExecuteFunction, useMoralisWeb3Api } from "react-moralis";
 // import React, { useEffect, useState } from "react";
 // import { Nav } from "../components";
 // import { MdOutlineVerified } from "react-icons/md";
 
-// const Account = () => {
+const Account = () => {
 // 	// const { Moralis } = useMoralis();
 // 	const { contractProcessor } = useWeb3ExecuteFunction();
 // 	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
@@ -64,7 +64,7 @@
 // 	function con() {
 // 		console.log("dd");
 // 	}
-// 	return (
+	return (
 // 		<>
 // 			<Head>
 // 				<title>My page title</title>
@@ -107,8 +107,8 @@
 // 								</div>
 // 								<div className="px-6 relative mt-1">
 // 									<div className="block">
-// 										<p className="text-gray-800 text-xs">
-// 											On sale</p>
+										<p className="text-gray-800 text-xs">
+											On sale</p>
 // 										<div className="text-gray-700 text-2xl">
 // 											<div className="flex items-baseline space-x-1">
 // 												<div className="truncate">
@@ -133,10 +133,10 @@
 // 				{/* {data && console.log(data.result)} */}
 // 			</div>
 // 		</>
-// 	)
-// }
+	)
+}
 
-// export default Account
+export default Account
 
 
 
