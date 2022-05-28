@@ -25,11 +25,11 @@ const GetAddressBalanceOfUSDT = () => {
 		fetch({ params: options })
 		console.log(web3Data);
 	}, [isLoading])
-	useEffect(() => {
-		fetchImage();
-		fetchWeb3Items();
-		console.log(onSuccess);
-	}, [web3Data])
+	// useEffect(() => {
+	// 	await fetchImage();
+	// 	await fetchWeb3Items();
+	// 	console.log(onSuccess);
+	// }, [web3Data])
 	async function fetchWeb3Items() {
 		if (!web3Data) { return }
 		console.log(web3Data);
