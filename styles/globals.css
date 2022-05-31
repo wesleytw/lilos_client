@@ -5,11 +5,11 @@
 
 @font-face {
   font-family: "PlasticBeach";
-  src: url("../public/fonts/PlasticBeach.ttf");
+  src: url("/fonts/PlasticBeach.ttf");
 }
 @font-face {
   font-family: "BADABB";
-  src: url("../public/fonts/BADABB__.TTF");
+  src: url("/fonts/BADABB__.TTF");
 }
 
 * html {
