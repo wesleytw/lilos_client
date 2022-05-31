@@ -10,7 +10,7 @@ const App = () => {
   return (
     <div className="min-h-screen">
       <Head>
-        <title>LILO</title>
+        <title>LILOS</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <Nav />

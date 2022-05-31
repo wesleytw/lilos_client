@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { ethers } from 'ethers'
+import axios from 'axios'
 import { useMoralis, useMoralisWeb3Api, useMoralisWeb3ApiCall, useNFTBalances } from "react-moralis";
 // import {ABI} from "../src/utils/abi.json";
 
 const GetAddressBalanceOfUSDT = () => {
-	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
+	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user, isInitialized } = useMoralis();
 	const { native } = useMoralisWeb3Api();
 	const [nftData, setNftData] = useState([]);
 	const [nftImg, setNftImg] = useState([]);
@@ -28,18 +30,18 @@ const GetAddressBalanceOfUSDT = () => {
 	useEffect(() => {
 		fetchWeb3Items();
 		console.log(web3Data);
-	}, [isLoading])
-	useEffect(() => {
-		fetchImage();
-		fetchWeb3Items();
-		console.log(onSuccess);
-	}, [onSuccess])
+	}, [isInitialized])
 	// useEffect(() => {
+	// 	fetchImage();
 	// 	fetchWeb3Items();
-	// 	console.log(web3Data);
-	// }, [nftBalance])
+	// 	console.log(onSuccess);
+	// }, [onSuccess])
+	useEffect(() => {
+		fetchWeb3Items();
+		console.log("web3Data", web3Data);
+	}, [web3Data])
 	async function fetchWeb3Items() {
-		setNftData( await fetch({ params: options }))
+		setNftData(await fetch({ params: options }))
 		if (!web3Data) { return }
 		console.log(web3Data);
 		const items = await Promise.all(web3Data?.map(async i => {
@@ -48,6 +50,26 @@ const GetAddressBalanceOfUSDT = () => {
 			// let nftImage = await fetchImage("0xf39E86EAf59077e3977496eA3c0352891DDa4037","0x3BED33Dab84a9415198D3FdB452e94829E16c1b6", "5");
 			console.log("uu");
 			await fetchImage(i[1].toString(), i[3].toString(), i[4].toString());
+			let firstFetch = true
+			let check = async function () {
+				console.log("no nftBalance");
+				setTimeout(function () {
+					if (nftBalance === null) {
+						console.log(firstFetch);
+						if (firstFetch){
+							fetchImage(i[1].toString(), i[3].toString(), i[4].toString());
+							firstFetch = false;
+						}
+						check();
+					} else {
+						console.log("has nftBalance", nftBalance);
+						// console.log(nftBalance.result[0].image);
+					}
+				}, 5500);
+			};
+			// while (nftBalance === null){
+			// await check();
+			// }
 			console.log("uu", nftBalance);
 			console.log("uyu");
 			let item = {
@@ -76,6 +98,7 @@ const GetAddressBalanceOfUSDT = () => {
 
 	async function fetchImage(owner, collection, tokenId) {
 		//getNFTBalances is not async so await is not working.
+		console.log("fetchImage")
 		getNFTBalances({
 			params: {
 				chain: "rinkeby",
@@ -84,34 +107,29 @@ const GetAddressBalanceOfUSDT = () => {
 				token_id: tokenId
 			}
 		});
-		let check = function () {
-			setTimeout(function () {
-				if (nftBalance === null) {
-					console.log("no nftBalance");
-					// getNFTBalances({
-					// 	params: {
-					// 		chain: "rinkeby",
-					// 		address: owner,
-					// 		token_addresses: collection,
-					// 		token_id: tokenId
-					// 	}
-					// });
-					check();
-				} else {
-					console.log("has nftBalance");
-					console.log(nftBalance.result[0].image);
-				}
-			}, 500);
-		};
+		// console.log("fetching Image")
+		// let check = function () {
+		// 	setTimeout(function () {
+		// 	if (nftBalance === null) {
+		// 		console.log("no nftBalance");
+		// 		// getNFTBalances({
+		// 		// 	params: {
+		// 		// 		chain: "rinkeby",
+		// 		// 		address: owner,
+		// 		// 		token_addresses: collection,
+		// 		// 		token_id: tokenId
+		// 		// 	}
+		// 		// });
+		// 		check();
+		// 	} else {
+		// 		console.log("has nftBalance", nftBalance);
+		// 		// console.log(nftBalance.result[0].image);
+		// 	}
+		// }, 50000);
+		// };
 		// check();
 
 		// }
-		// console.log(nftBalance.result[0].image);
-		// {nftBalance && 
-		// console.log(nftBalance.result[0].image);
-		// // return nftBalance.result[0].image;
-		// }
-		// return nftBalance.result[0].image;
 	};
 
 	return (

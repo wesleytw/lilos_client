@@ -1,0 +1,1 @@
+export const marketAddress = "0x3410f88bB677b237F563432EE6e3444f04287C26"

@@ -7,7 +7,7 @@ import { MdOutlineVerified } from "react-icons/md";
 
 const Account = () => {
 
-	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
+	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user, isInitialized } = useMoralis();
 	const { getNFTBalances, data } = useNFTBalances();
 
 	//
@@ -24,7 +24,7 @@ const Account = () => {
 				token_id: "5"
 			}
 		})
-	}, [])
+	}, [isInitialized])
 
 	const verifyCollection = (tokenAddress) => {
 		if (tokenAddress == "0x3bed33dab84a9415198d3fdb452e94829e16c1b6") {
