@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from "next/head"
-import { Nav, Welcome, Market, Transactions, Loader, Services, Footer, Account } from '../components';
+import { Nav, Welcome, Market, Transactions, Loader, Services, Footer, Account , CardModal} from '../components';
 
 import { useState } from 'react'
 // import { Dialog } from '@headlessui/react'

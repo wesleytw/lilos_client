@@ -73,7 +73,7 @@ const Account = () => {
 											<p className="leading-normal text-gray-700 flex-wrap truncate">{`${shortenAddress(nft.owner_of)}`}</p>
 										</div>
 									</div>
-									<div className="px-6 relative mt-1"><div className="block"><p className="text-gray-800 text-xs">On sale</p><div className="text-gray-700 text-2xl"><div className="flex items-baseline space-x-1"><div className="truncate">6.9 Ⓝ</div><div className="text-xs text-gray-500 truncate">~ $83.15</div></div></div></div><div className="flex justify-between md:items-baseline"><p className="font-bold text-white cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">Buy Now</p><a className="text-gray-500 underline text-sm md:text-sm" href="/token/x.paras.near::145332">See Details</a></div></div>
+									<div className="px-6 relative mt-1"><div className="block"><p className="text-gray-800 text-xs">On sale</p><div className="text-gray-700 text-2xl"><div className="flex items-baseline space-x-1"><div className="truncate">6.9 Ⓝ</div><div className="text-xs text-gray-500 truncate">~ $83.15</div></div></div></div><div className="flex justify-between md:items-baseline"><p className="font-bold text-black cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">Buy Now</p><a className="text-gray-500 underline text-sm md:text-sm" href="/token/x.paras.near::145332">See Details</a></div></div>
 								</div>
 								{/* </div> */}
 							</div>

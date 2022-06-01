@@ -5,9 +5,8 @@ const Footer = () => (
   <div className="w-full flex md:justify-center justify-between items-center flex-col p-4 gradient-bg-footer">
     <div className="w-full flex sm:flex-row flex-col justify-between items-center my-4">
       <div className="flex flex-[0.5] justify-center items-center">
-        <div className=" text-black font-PlasticBeach text-[44px] ">
-          LILOS
-        </div>
+        <a className="btn btn-ghost no-animation hover:bg-[#fff0] normal-case text-[44px] font-PlasticBeach ">
+          LILOS</a>
       </div>
       <div className="flex flex-1 justify-evenly items-center flex-wrap text-black text-base text-center sm:mt-0 mt-5 w-full ">
         <p className="mx-2 cursor-pointer">White Paper</p>

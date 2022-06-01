@@ -1,5 +1,5 @@
 import Head from "next/head"
-import { Nav } from "../components";
+import { Nav, Footer, CardModal } from "../components";
 import React, { useEffect, useState } from "react";
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { ethers } from 'ethers'
@@ -9,10 +9,9 @@ import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
 import { MdOutlineVerified } from "react-icons/md";
 
-
-
 const Market = () => {
 	const [nfts, setNfts] = useState([]);
+	const [cardInfo, setcardInfo] = useState();
 
 	useEffect(() => {
 		fetchWeb3Items();
@@ -42,6 +41,7 @@ const Market = () => {
 			const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
 
 			let item = {
+				listingId: i.listingId.toNumber(),
 				status: i.status,
 				lessor: i.lessor,
 				lessee: i.lessee,
@@ -60,9 +60,6 @@ const Market = () => {
 		}))
 		setNfts(items)
 	}
-
-
-
 
 	return (
 		<>
@@ -92,7 +89,7 @@ const Market = () => {
 													</div>
 												}
 											</div>
-											<p className="text-black text-l truncate">
+											<p className="text-black text-lg truncate">
 												#{`${nft.tokenId}`}
 											</p>
 										</div>
@@ -101,11 +98,11 @@ const Market = () => {
 										<div className="px-6 py-4 flex justify-between items-center">
 											{/* <h4 className="mb-3 text-xl font-semibold tracking-tight text-gray-800 break-words truncate">{`${nft.name}`} </h4> */}
 											<div>
-											<p className="text-gray-800 text-xs">Lessor</p>
-											<p className="leading-normal text-gray-700 justify-end">{`${shortenAddress(nft.lessor)}`}</p>
+												<p className="text-gray-800 text-xs">Lessor</p>
+												<p className="leading-normal text-gray-700 justify-end">{`${shortenAddress(nft.lessor)}`}</p>
 											</div>
 											<a href={`${nft.openseaLink}`}>
-												<img className=" h-8 hover:shadow-lg z-50 rounded-full" src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.png" />
+												<img className=" h-8 shadow-sm hover:shadow-lg z-50 rounded-full" src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.png" />
 											</a>
 										</div>
 									</div>
@@ -115,18 +112,20 @@ const Market = () => {
 												On sale</p>
 											<div className="text-gray-700 text-2xl">
 												<div className="flex items-baseline space-x-1">
-													<div className="truncate">
-														{nft.collateral_value * 100000000000000}Ⓝ</div>
+													<div className="truncate leading-normal">
+														{nft.collateral_value}</div>
+													<img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
 													<div className="text-xs text-gray-500 truncate">
 														~ $83.15</div>
 												</div>
 											</div>
 										</div>
-										<div className="flex justify-between md:items-baseline">
-											<p className="font-bold text-white cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">
+										<div className="flex justify-between p-3 md:items-baseline">
+											<p className="font-bold text-black cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">
 												Buy Now</p>
-											<a className="text-gray-500 underline text-sm md:text-sm" href="/token/x.paras.near::145332">
-												See Details</a>
+											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:bg-secondary">
+												Lease In
+											</label>
 										</div>
 									</div>
 								</div>
@@ -136,6 +135,8 @@ const Market = () => {
 					</div>
 				))}
 			</div>
+			<CardModal cardInfo={cardInfo}/>
+			<Footer />
 		</>
 	)
 

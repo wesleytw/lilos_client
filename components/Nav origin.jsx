@@ -1,71 +1,30 @@
-import React, { useEffect, useState } from "react";
-import Web3Modal from 'web3modal'
-import { ethers } from 'ethers'
+import React, { useContext, useRef, useState, useEffect } from "react";
 import Link from 'next/link'
 
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { useMoralis } from "react-moralis";
 
 const Nav = () => {
-	// const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
-	// const login = async () => {
-	// 	if (!isAuthenticated) {
-	// 		await authenticate({ signingMessage: "Login LILOS" })
-	// 			.then(function (user) {
-	// 				console.log("logged in user:", user);
-	// 				console.log(user.get("ethAddress"));
-	// 			})
-	// 			.catch(function (error) {
-	// 				console.log(error);
-	// 			});
-	// 		console.log('auth', isAuthenticated)
-	// 	} else {
-	// 		console.log(user.get("ethAddress"));
-	// 	}
-	// };
-	// const logOut = async () => {
-	// 	await logout();
-	// 	console.log("logged out");
-	// }
-
-	const [signer, setSinger] = useState();
-	const [error, setError] = useState("");
-	const [account, setAccount] = useState();
-
-	let web3Modal
-
-
-
-	const connectWallet = async () => {
-		try {
-			const web3Modal = new Web3Modal();
-			const connection = await web3Modal.connect()
-			const provider = new ethers.providers.Web3Provider(connection)
-			const signer = provider.getSigner()
-			const accounts = await provider.listAccounts();
-			const network = await provider.getNetwork();
-			console.log(accounts[0])
-			setAccount(accounts[0])
-			if (signer) setSinger(signer);
-			console.log("signer", signer)
-		} catch (error) {
-			setError(error);
+	const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
+	const login = async () => {
+		if (!isAuthenticated) {
+			await authenticate({ signingMessage: "Login LILOS" })
+				.then(function (user) {
+					console.log("logged in user:", user);
+					console.log(user.get("ethAddress"));
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+			console.log('auth', isAuthenticated)
+		} else {
+			console.log(user.get("ethAddress"));
 		}
 	};
-
-	useEffect(() => {
-		// if (web3Modal.cachedProvider) {
-		web3Modal = new Web3Modal();
-		if (signer){
-		connectWallet();
-		}
-		// }
-	}, []);
-
-	const disconnect = async () => {
-		// await web3Modal.clearCachedProvider();
-		// web3ModalRef.current.clearCachedProvider();
-	};
+	const logOut = async () => {
+		await logout();
+		console.log("logged out");
+	}
 
 	return (
 		<div className="navbar sticky top-0 left-0 right-0 z-50 h-[4rem] bg-[#fff] border-b-[1px] border-[#eaebed] px-6 py-4">
@@ -120,7 +79,7 @@ const Nav = () => {
 					</li>
 				</ul>
 			</div>
-			{/* {!isAuthenticated && (
+			{!isAuthenticated && (
 				<div className="navbar-end">
 					<button onClick={login} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
 						connect</button>
@@ -130,17 +89,6 @@ const Nav = () => {
 				<div className="navbar-end">
 					<button onClick={logOut} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
 						logout</button>
-				</div>
-			)} */}
-			{!signer ? (
-				<div className="navbar-end">
-					<button onClick={() => connectWallet()} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
-						connect</button>
-				</div>
-			) : (
-				<div className="navbar-end">
-					{/* <button onClick={() => disconnect()} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
-						logout</button> */}
 				</div>
 			)}
 		</div>
