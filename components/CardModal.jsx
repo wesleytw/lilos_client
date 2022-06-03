@@ -4,6 +4,8 @@ import { ethers } from 'ethers'
 import market from '../src/abi/Lilos_V1.json'
 import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
+import { MdOutlineVerified } from "react-icons/md";
+
 
 const CardModal = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
@@ -42,7 +44,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
     await transaction.wait()
   }
   const verifyCollection = (tokenAddress) => {
-    if (tokenAddress == "0x3bed33dab84a9415198d3fdb452e94829e16c1b6") {
+    if (tokenAddress == "0x3BED33Dab84a9415198D3FdB452e94829E16c1b6") {
       return true
     } else {
       return false
@@ -60,18 +62,19 @@ const CardModal = ({ cardInfo, currentAccount }) => {
               <img className='object-cover' src={cardInfo?.image}></img>
             </div>
             <div className="h-[400px] w-3/5 px-16 pt-10 overflow-scroll">
-              <div className="flex justify-center ">
-                <h1 className="text-3xl font-BADABB p-5">{cardInfo?.name} #{cardInfo?.tokenId}</h1>
+              <div className="flex justify-center p-5">
+                <h1 className="text-3xl font-BADABB ">{cardInfo?.name} #{cardInfo?.tokenId}</h1>
                 {verifyCollection(cardInfo?.collection) &&
-                  <div>
+                  <div className="pl-2">
                     <MdOutlineVerified title="Verified Collection👌" fontSize={15} color="#000" />
                   </div>
                 }
               </div>
               {/* <p className="py-4">You've been selected htmlFor a chance to get one year of subscription to use Wikipedia htmlFor free!</p> */}
+
               <div className="px-6 relative mt-2">
                 <div className="block pb-2">
-                  <p className="text-gray-800 text-xs">
+                  <p className="text-gray-800 text-sm">
                     Collateral </p>
                   <div className="text-gray-700 text-2xl">
                     <div className="flex items-baseline space-x-1">
@@ -83,20 +86,23 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                   </div>
                 </div>
                 <div className="block pb-2">
-                  <p className="text-gray-800 text-xs">
+                  <p className="text-gray-800 text-sm">
                     Rent </p>
-                  <div className="text-gray-700 text-xl">
+                  <div className="text-gray-700 text-2xl">
                     <div className="flex items-baseline space-x-1">
                       <div className="truncate leading-normal">{cardInfo?.rental_value}</div>
-                      <img className='h-3' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
+                      <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
+                      <div className="text-sm text-gray-500 truncate font-mono">
+                       ~ {((cardInfo?.rental_wei / cardInfo?.lease_term) / Math.pow(10, 9)).toFixed(1)}    gwei/sec
+										</div>
                     </div>
-                    <div className="text-xs text-gray-500 truncate">
+                    {/* <div className="text-lg text-gray-500 truncate">
                       ~ {((cardInfo?.rental_wei / cardInfo?.lease_term) / Math.pow(10, 9)).toFixed(1)}    gwei/sec
-													</div>
+										</div> */}
                   </div>
                 </div>
                 <div className="block pb-2">
-                  <p className="text-gray-800 text-xs">
+                  <p className="text-gray-800 text-sm">
                     Lease term </p>
                   <div className="text-gray-700 text-2xl">
                     <div className="flex items-baseline space-x-1">
