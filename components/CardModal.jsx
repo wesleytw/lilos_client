@@ -5,11 +5,12 @@ import market from '../src/abi/Lilos_V1.json'
 import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
 import { MdOutlineVerified } from "react-icons/md";
-
+import { shortenAddress } from "../src/utils/shortenAddress";
 
 const CardModal = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState("");
 
   const connectWallet = async () => {
     try {
@@ -28,21 +29,28 @@ const CardModal = ({ cardInfo, currentAccount }) => {
     }
   };
   useEffect(() => {
-    connectWallet();
-  }, []);
+    connectWallet()
+    setLoading("")
+  }, [cardInfo]);
 
 
   async function leaseIn() {
     const marketContract = new ethers.Contract(marketAddress, market.abi, signer)
     const totalValue = parseFloat(cardInfo.collateral_value) + parseFloat(cardInfo.rental_value)
-    const msgValue = ethers.utils.parseUnits(totalValue.toString(), 'ether')
-    console.log("totalValue,totalValue", totalValue)
-    console.log("msgValue", msgValue)
-    const transaction = await marketContract.leaseIn(cardInfo.listingId, {
-      value: msgValue
-    })
-    await transaction.wait()
+    try {
+      setLoading("leasing")
+      const msgValue = ethers.utils.parseUnits(totalValue.toString(), 'ether')
+      const transaction = await marketContract.leaseIn(cardInfo.listingId, {
+        value: msgValue
+      })
+      await transaction.wait()
+      setLoading("done")
+    } catch (error) {
+      setLoading("")
+      alert(error)
+    }
   }
+
   const verifyCollection = (tokenAddress) => {
     if (tokenAddress == "0x3BED33Dab84a9415198D3FdB452e94829E16c1b6") {
       return true
@@ -50,6 +58,16 @@ const CardModal = ({ cardInfo, currentAccount }) => {
       return false
     }
   }
+
+  let listbtn
+  if (loading == "") {
+    listbtn = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => leaseIn()}>least in</button>
+  } else if (loading == "leasing") {
+    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => leaseIn()}>leasing...</button>
+  } else if (loading == "done") {
+    listbtn = <div class="badge badge-lg badge-success text-sm p-3">Successfully leased 🎉</div>
+  }
+
   return (
     <>
       <input type="checkbox" id="my-modal-4" className="modal-toggle " />
@@ -93,7 +111,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                       <div className="truncate leading-normal">{cardInfo?.rental_value}</div>
                       <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
                       <div className="text-sm text-gray-500 truncate font-mono">
-                       ~ {((cardInfo?.rental_wei / cardInfo?.lease_term) / Math.pow(10, 9)).toFixed(1)}    gwei/sec
+                        ~ {((cardInfo?.rental_wei / cardInfo?.lease_term) / Math.pow(10, 9)).toFixed(1)}    gwei/sec
 										</div>
                     </div>
                     {/* <div className="text-lg text-gray-500 truncate">
@@ -121,8 +139,9 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                   Please connect wallet
                   </div>
                 ) : (
-                  <button className="btn text-white btn-primary btn-sm normal-case border-none justify-center hover:bg-secondary" onClick={() => leaseIn()}>
-                    Lease In</button>
+                  <div className="mt-6 flex justify-center">
+                    {listbtn}
+                  </div>
                 )
                 }
               </div>
