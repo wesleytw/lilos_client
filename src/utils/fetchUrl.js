@@ -5,7 +5,7 @@ const corsURL = 'https://cors-anywhere.herokuapp.com/';
 export const fetchUrl = async (url) => {
   try {
     if (!url) {
-      console.log("fetch err", url);
+      console.log("url err", url);
       return url
 
     } else if (url.includes("ipfs://")) {
@@ -42,7 +42,7 @@ export const resolveImg = async (img) => {
       return img
     }
   } catch (error) {
-    console.log("err")
+    console.log("resolveImg")
   }
 }
 

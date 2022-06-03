@@ -1,71 +1,57 @@
 import React, { useEffect, useState } from "react";
-import Web3Modal from 'web3modal'
+// import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import Link from 'next/link'
 
 import { shortenAddress } from "../src/utils/shortenAddress";
-import { useMoralis } from "react-moralis";
 
-const Nav = () => {
-	// const { account, isAuthenticated, authenticate, isAuthenticating, logout, user } = useMoralis();
-	// const login = async () => {
-	// 	if (!isAuthenticated) {
-	// 		await authenticate({ signingMessage: "Login LILOS" })
-	// 			.then(function (user) {
-	// 				console.log("logged in user:", user);
-	// 				console.log(user.get("ethAddress"));
-	// 			})
-	// 			.catch(function (error) {
-	// 				console.log(error);
-	// 			});
-	// 		console.log('auth', isAuthenticated)
-	// 	} else {
-	// 		console.log(user.get("ethAddress"));
-	// 	}
-	// };
-	// const logOut = async () => {
-	// 	await logout();
-	// 	console.log("logged out");
-	// }
+const Nav = ({ currentAccount, setCurrentAccount }) => {
+	/////web3 state
+	const checkIfWalletIsConnected = async () => {
+		const { ethereum } = window;
+		if (!ethereum) {
+			console.log("Make sure you have metamask!");
+			return;
+		} else {
+			console.log("We have the ethereum object", ethereum);
+		}
 
-	const [signer, setSinger] = useState();
-	const [error, setError] = useState("");
-	const [account, setAccount] = useState();
+		const accounts = await ethereum.request({ method: 'eth_accounts' });
 
-	let web3Modal
+		if (accounts.length !== 0) {
+			const account = accounts[0];
+			console.log("Found an authorized account:", account);
+			setCurrentAccount(account);
+		} else {
+			console.log("No connected account found");
+		}
 
-
-
+		let chainId = await ethereum.request({ method: 'eth_chainId' });
+		console.log("Connected to chain " + chainId);
+		const rinkebyChainId = "0x4";
+		if (chainId !== rinkebyChainId) {
+			alert("You are not connected to the Rinkeby Test Network!");
+		}
+	}
 	const connectWallet = async () => {
 		try {
-			const web3Modal = new Web3Modal();
-			const connection = await web3Modal.connect()
-			const provider = new ethers.providers.Web3Provider(connection)
-			const signer = provider.getSigner()
-			const accounts = await provider.listAccounts();
-			const network = await provider.getNetwork();
-			console.log(accounts[0])
-			setAccount(accounts[0])
-			if (signer) setSinger(signer);
-			console.log("signer", signer)
+			const { ethereum } = window;
+			if (!ethereum) {
+				alert("Get MetaMask!");
+				return;
+			}
+			const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+			console.log("Connected", accounts[0]);
+			setCurrentAccount(accounts[0]);
 		} catch (error) {
-			setError(error);
+			console.log("error", error.message);
 		}
-	};
+	}
 
 	useEffect(() => {
-		// if (web3Modal.cachedProvider) {
-		web3Modal = new Web3Modal();
-		if (signer){
-		connectWallet();
-		}
-		// }
-	}, []);
-
-	const disconnect = async () => {
-		// await web3Modal.clearCachedProvider();
-		// web3ModalRef.current.clearCachedProvider();
-	};
+		checkIfWalletIsConnected();
+	}, [])
+	///////web3 state
 
 	return (
 		<div className="navbar sticky top-0 left-0 right-0 z-50 h-[4rem] bg-[#fff] border-b-[1px] border-[#eaebed] px-6 py-4">
@@ -120,29 +106,19 @@ const Nav = () => {
 					</li>
 				</ul>
 			</div>
-			{/* {!isAuthenticated && (
+
+			{/* web3 state */}
+			{currentAccount === "" ? (
 				<div className="navbar-end">
-					<button onClick={login} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
-						connect</button>
-				</div>
-			)}
-			{isAuthenticated && (
-				<div className="navbar-end">
-					<button onClick={logOut} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
-						logout</button>
-				</div>
-			)} */}
-			{!signer ? (
-				<div className="navbar-end">
-					<button onClick={() => connectWallet()} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
+					<button onClick={connectWallet} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
 						connect</button>
 				</div>
 			) : (
 				<div className="navbar-end">
-					{/* <button onClick={() => disconnect()} className="btn text-white btn-primary border-none rounded-xl px-3 py-1 mr-2 text-lg justify-center hover:bg-secondary font-BADABB tracking-[5px]">
-						logout</button> */}
+					<p>{shortenAddress(currentAccount)}</p>
 				</div>
 			)}
+			{/* web3 state */}
 		</div>
 	)
 }

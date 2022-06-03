@@ -10,3 +10,4 @@ export {default as NftCard} from './NftCard';
 export {default as Account} from './Account';
 export {default as Market} from './Market';
 export {default as CardModal} from './CardModal';
+export {default as CardBalanceModal} from './CardBalanceModal';

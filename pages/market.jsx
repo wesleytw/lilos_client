@@ -12,6 +12,8 @@ import { MdOutlineVerified } from "react-icons/md";
 const Market = () => {
 	const [nfts, setNfts] = useState([]);
 	const [cardInfo, setcardInfo] = useState();
+	const [currentAccount, setCurrentAccount] = useState("");
+
 
 	useEffect(() => {
 		fetchWeb3Items();
@@ -39,7 +41,9 @@ const Market = () => {
 			const meta = await fetchUrl(tokenUri)
 			const img = await resolveImg(meta?.image)
 			const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
-
+			const day = parseInt(i.lease_term/24/3600)
+			const hour = parseInt(i.lease_term/3600)%24
+			const min = parseInt(i.lease_term/60)%60
 			let item = {
 				listingId: i.listingId.toNumber(),
 				status: i.status,
@@ -51,7 +55,11 @@ const Market = () => {
 				image: img,
 				collateral_value: ethers.utils.formatEther(i.collateral_value),
 				rental_value: ethers.utils.formatEther(i.rental_value),
+				rental_wei: i.rental_value.toNumber(),
 				lease_term: i.lease_term.toNumber(),
+				day: day,
+				hour: hour,
+				min: min,
 				lease_start_date: i.lease_start_date.toNumber(),
 				lease_end_date: i.lease_end_date.toNumber(),
 				openseaLink: openseaLink
@@ -69,7 +77,7 @@ const Market = () => {
 			</Head>
 			{/* px-28 pt-28 md:px-56 md:py-8 lg:px-96 lg:py-16 */}
 			{/* bg-[#303339] flex-auto w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer */}
-			<Nav />
+			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
 
 			<div className="w-screen mt-0 pt-40 px-5 overflow-y-auto flex flex-wrap ">
 				{nfts && nfts.map(nft => (
@@ -96,7 +104,6 @@ const Market = () => {
 										{/* <div className="max-full m-8 mb-16 rounded-lg shadow-lg items-center"> */}
 										<img className="object-contain w-full h-48 " src={nft.image} />
 										<div className="px-6 py-4 flex justify-between items-center">
-											{/* <h4 className="mb-3 text-xl font-semibold tracking-tight text-gray-800 break-words truncate">{`${nft.name}`} </h4> */}
 											<div>
 												<p className="text-gray-800 text-xs">Lessor</p>
 												<p className="leading-normal text-gray-700 justify-end">{`${shortenAddress(nft.lessor)}`}</p>
@@ -107,22 +114,48 @@ const Market = () => {
 										</div>
 									</div>
 									<div className="px-6 relative mt-2">
-										<div className="block">
+										<div className="block pb-2">
 											<p className="text-gray-800 text-xs">
-												On sale</p>
+												Collateral </p>
 											<div className="text-gray-700 text-2xl">
 												<div className="flex items-baseline space-x-1">
-													<div className="truncate leading-normal">
-														{nft.collateral_value}</div>
+													<div className="truncate leading-normal">{nft.collateral_value}</div>
 													<img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
 													<div className="text-xs text-gray-500 truncate">
 														~ $83.15</div>
 												</div>
 											</div>
 										</div>
-										<div className="flex justify-between p-3 md:items-baseline">
-											<p className="font-bold text-black cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">
-												Buy Now</p>
+										<div className="block pb-2">
+											<p className="text-gray-800 text-xs">
+												Rent </p>
+											<div className="text-gray-700 text-xl">
+												<div className="flex items-baseline space-x-1">
+													<div className="truncate leading-normal">{nft.rental_value}</div>
+													<img className='h-3' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
+													</div>
+													<div className="text-xs text-gray-500 truncate">
+													~ {((nft.rental_wei/nft.lease_term)/Math.pow(10, 9)).toFixed(1)}    gwei/sec
+													</div>
+											</div>
+										</div>
+										<div className="block pb-2">
+											<p className="text-gray-800 text-xs">
+												Lease term </p>
+											<div className="text-gray-700 text-2xl">
+												<div className="flex items-baseline space-x-1">
+													<div className="font-mono truncate leading-normal text-lg">{nft.day}</div>
+													<div className="font-mono text-sm">days</div> 
+													<div className="font-mono truncate leading-normal text-lg">{nft.hour}</div>
+													<div className="font-mono text-sm">hours</div> 
+													<div className="font-mono truncate leading-normal text-lg">{nft.min}</div>
+													<div className="font-mono text-sm">mins</div> 
+												</div>
+											</div>
+										</div>
+										<div className="flex justify-end p-3 md:items-baseline">
+											{/* <p className="font-bold text-black cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">
+												Buy Now</p> */}
 											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:bg-secondary">
 												Lease In
 											</label>
@@ -135,7 +168,7 @@ const Market = () => {
 					</div>
 				))}
 			</div>
-			<CardModal cardInfo={cardInfo}/>
+			<CardModal cardInfo={cardInfo} currentAccount={currentAccount} />
 			<Footer />
 		</>
 	)

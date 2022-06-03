@@ -6,14 +6,15 @@ import { useState } from 'react'
 // import { Dialog } from '@headlessui/react'
 
 const App = () => {
-  let [isOpen, setIsOpen] = useState(true)
+  const [currentAccount, setCurrentAccount] = useState("");
+
   return (
     <div className="min-h-screen">
       <Head>
         <title>LILOS</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Nav />
+			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
       <Welcome />
       <Footer />
       
