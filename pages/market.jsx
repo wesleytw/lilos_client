@@ -32,7 +32,12 @@ const Market = () => {
 		const provider = new ethers.providers.InfuraProvider('rinkeby', "fed1ef26af5648de8dea5d37316687db");
 		const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
 		const getActiveItems = await marketContract.getActiveItems()
-
+		const time = await marketContract.getTime()
+console.log("ttt",time.toNumber())
+// const blockNumBefore = await ethers.provider.getBlockNumber();
+// const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+// const timestampBefore = blockBefore.timestamp;
+// console.log("ttt",timestampBefore)
 		const items = await Promise.all(getActiveItems?.map(async i => {
 
 			const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
@@ -55,7 +60,7 @@ const Market = () => {
 				image: img,
 				collateral_value: ethers.utils.formatEther(i.collateral_value),
 				rental_value: ethers.utils.formatEther(i.rental_value),
-				rental_wei: i.rental_value.toNumber(),
+				rental_gwei: ethers.utils.formatUnits(i.rental_value, "gwei"),
 				lease_term: i.lease_term.toNumber(),
 				day: day,
 				hour: hour,
@@ -108,7 +113,7 @@ const Market = () => {
 												<p className="text-gray-800 text-xs">Lessor</p>
 												<p className="leading-normal text-gray-700 justify-end">{`${shortenAddress(nft.lessor)}`}</p>
 											</div>
-											<a href={`${nft.openseaLink}`}>
+											<a href={`${nft.openseaLink}`} target="_blank" rel="noopener noreferrer">
 												<img className=" h-8 shadow-sm hover:shadow-lg z-50 rounded-full" src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.png" />
 											</a>
 										</div>
@@ -135,7 +140,7 @@ const Market = () => {
 													<img className='h-3' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
 													</div>
 													<div className="text-xs text-gray-500 truncate">
-													~ {((nft.rental_wei/nft.lease_term)/Math.pow(10, 9)).toFixed(1)}    gwei/sec
+													~ {(nft.rental_gwei/nft.lease_term).toFixed(1)}    gwei/sec
 													</div>
 											</div>
 										</div>

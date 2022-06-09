@@ -31,7 +31,14 @@ const CardModal = ({ cardInfo, currentAccount }) => {
   useEffect(() => {
     connectWallet()
     setLoading("")
-  }, [cardInfo]);
+    // let stamp = 1578162600000
+    let stamp = 1654505760*1000 //normal(java) timestamp is in milliseconds, but block.timestamp is in seconds.
+    let time = new Date(stamp)
+    let month = time.getMonth()+1
+    let year = time.getFullYear()
+    let day = time.getDate()
+    // console.log("month",month,"day",day,"year", year)
+  }, [cardInfo])
 
 
   async function leaseIn() {
@@ -63,7 +70,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
   if (loading == "") {
     listbtn = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => leaseIn()}>least in</button>
   } else if (loading == "leasing") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => leaseIn()}>leasing...</button>
+    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => leaseIn()}>leasing</button>
   } else if (loading == "done") {
     listbtn = <div class="badge badge-lg badge-success text-sm p-3">Successfully leased 🎉</div>
   }
@@ -111,7 +118,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                       <div className="truncate leading-normal">{cardInfo?.rental_value}</div>
                       <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
                       <div className="text-sm text-gray-500 truncate font-mono">
-                        ~ {((cardInfo?.rental_wei / cardInfo?.lease_term) / Math.pow(10, 9)).toFixed(1)}    gwei/sec
+                        ~ {(cardInfo?.rental_gwei / cardInfo?.lease_term).toFixed(1)}    gwei/sec
 										</div>
                     </div>
                     {/* <div className="text-lg text-gray-500 truncate">

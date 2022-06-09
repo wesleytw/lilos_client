@@ -91,9 +91,9 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
   if (loading == "") {
     listbtn = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => list()}>List</button>
   } else if (loading == "approving") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>approving...</button>
+    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>approving</button>
   } else if (loading == "listing") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>listing...</button>
+    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>listing</button>
   } else if (loading == "done") {
     listbtn = <div class="badge badge-lg badge-success text-sm p-3">Successfully listed 🎉</div>
   }
