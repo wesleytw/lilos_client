@@ -84,12 +84,12 @@ console.log("ttt",time.toNumber())
 			{/* bg-[#303339] flex-auto w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer */}
 			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
 
-			<div className="w-screen mt-0 pt-12 px-5 overflow-y-auto flex flex-wrap ">
+			<div className="w-screen mt-0 pt-4 px-5 overflow-y-auto flex flex-wrap ">
 				{nfts && nfts.map(nft => (
 					<div key={`${nft.tokenId} ${nft.collection}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
 						<div className="w-full m-auto">
-							<div className="max-full bg-white m-1 mb-16 rounded-3xl hover:shadow-2xl items-center border-[1px] border-[#00000025]">
-								<div className="card-wrap relative m-auto outline-none " >
+							<div className="max-full bg-white m-1 mb-16 rounded-3xl hover:shadow-2xl items-center border-[1px] border-[#00000025] hover:cursor-default cursor-default">
+								<div className="card-wrap relative m-auto outline-none hover:cursor-default " >
 									<div className="h-full py-3 flex flex-col">
 										<div className="text-center px-2">
 											<div className="flex justify-center ">
