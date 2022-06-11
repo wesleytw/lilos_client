@@ -70,16 +70,14 @@ const Nav = ({ currentAccount, setCurrentAccount }) => {
 							<li><a>Market</a></li></Link>
 						<Link href="/account" >
 							<li><a>Account</a></li></Link>
-						<Link href="/demo" >
-							<li><a>Demo</a></li></Link>
 						<li tabIndex="0">
 							<a className="justify-between">
-								Parent
+								comming
             		<svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>
 							</a>
 							<ul className="p-2 bg-white shadow">
-								<li><a>Submenu 1</a></li>
-								<li><a>Submenu 2</a></li>
+								<li><a>nft Collateral</a></li>
+								<li><a>lilo</a></li>
 							</ul>
 						</li>
 					</ul>
@@ -92,18 +90,16 @@ const Nav = ({ currentAccount, setCurrentAccount }) => {
 						<li><a>Market</a></li></Link>
 					<Link href="/account" >
 						<li><a>Account</a></li></Link>
-					<Link href="/demo" >
-						<li><a>Demo</a></li></Link>
 					<li tabIndex="0">
 						<a>
-							Parent
+							comming
           <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" /></svg>
 						</a>
 						<ul className="p-2 bg-white shadow-sm">
-							<li><a>Submenu 1</a></li>
-							<li><a>Submenu 2</a></li>
+							<li><a>nft Collateral</a></li>
+							<li><a>lilo</a></li>
 						</ul>
-					</li>
+					</li> 
 				</ul>
 			</div>
 
@@ -114,7 +110,7 @@ const Nav = ({ currentAccount, setCurrentAccount }) => {
 						connect</button>
 				</div>
 			) : (
-				<div className="navbar-end">
+				<div className="navbar-end font-BADABB tracking-[5px]">
 					<p>{shortenAddress(currentAccount)}</p>
 				</div>
 			)}
