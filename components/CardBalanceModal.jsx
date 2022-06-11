@@ -106,7 +106,7 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
           <label htmlFor="my-modal-4" className="btn btn-sm btn-primary btn-circle border-none text-white overflow-hidden hover:bg-secondary absolute right-4 top-4 ">
             ✕</label>
           <div className="flex h-full justify-center items-center overflow-hidden px-16 bg-[#e9dfdf8e]  shadow-lg">
-            <div className=' w-2/5 bg-accent overflow-hidden object-cover '>
+            <div className=' w-2/5 overflow-hidden object-cover '>
               <img className='object-cover' src={cardInfo?.image}></img>
             </div>
             <div className="h-[400px] w-3/5 px-16 pt-3 overflow-scroll">
