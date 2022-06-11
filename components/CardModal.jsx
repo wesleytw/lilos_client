@@ -43,13 +43,14 @@ const CardModal = ({ cardInfo, currentAccount }) => {
 
   async function leaseIn() {
     const marketContract = new ethers.Contract(marketAddress, market.abi, signer)
-    const totalValue = parseFloat(cardInfo.collateral_value) + parseFloat(cardInfo.rental_value)
+    const totalValue = cardInfo.collateral_value.add(cardInfo.rental_value)
     try {
       setLoading("leasing")
-      const msgValue = ethers.utils.parseUnits(totalValue.toString(), 'ether')
+      console.log("msg eth",totalValue)
       const transaction = await marketContract.leaseIn(cardInfo.listingId, {
-        value: msgValue
+        value: totalValue
       })
+
       await transaction.wait()
       setLoading("done")
     } catch (error) {
@@ -103,7 +104,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                     Collateral </p>
                   <div className="text-gray-700 text-2xl">
                     <div className="flex items-baseline space-x-1">
-                      <div className="truncate leading-normal">{cardInfo?.collateral_value}</div>
+                      <div className="truncate leading-normal">{cardInfo?.collateral_eth}</div>
                       <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
                       <div className="text-xs text-gray-500 truncate">
                         ~ $83.15</div>
@@ -115,7 +116,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                     Rent </p>
                   <div className="text-gray-700 text-2xl">
                     <div className="flex items-baseline space-x-1">
-                      <div className="truncate leading-normal">{cardInfo?.rental_value}</div>
+                      <div className="truncate leading-normal">{cardInfo?.rental_eth}</div>
                       <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
                       <div className="text-sm text-gray-500 truncate font-mono">
                         ~ {(cardInfo?.rental_gwei / cardInfo?.lease_term).toFixed(1)}    gwei/sec

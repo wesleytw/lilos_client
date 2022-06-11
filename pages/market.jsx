@@ -58,8 +58,11 @@ console.log("ttt",time.toNumber())
 				name: name,
 				tokenId: i.tokenId.toNumber(),
 				image: img,
-				collateral_value: ethers.utils.formatEther(i.collateral_value),
-				rental_value: ethers.utils.formatEther(i.rental_value),
+				collateral_value: i.collateral_value,
+				collateral_eth: ethers.utils.formatEther(i.collateral_value),
+				collateral_gwei: ethers.utils.formatUnits(i.collateral_value, "gwei"),
+				rental_value: i.rental_value,
+				rental_eth: ethers.utils.formatEther(i.rental_value),
 				rental_gwei: ethers.utils.formatUnits(i.rental_value, "gwei"),
 				lease_term: i.lease_term.toNumber(),
 				day: day,
@@ -124,7 +127,7 @@ console.log("ttt",time.toNumber())
 												Collateral </p>
 											<div className="text-gray-700 text-2xl">
 												<div className="flex items-baseline space-x-1">
-													<div className="truncate leading-normal">{nft.collateral_value}</div>
+													<div className="truncate leading-normal">{nft.collateral_eth}</div>
 													<img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
 													<div className="text-xs text-gray-500 truncate">
 														~ $83.15</div>
@@ -136,7 +139,7 @@ console.log("ttt",time.toNumber())
 												Rent </p>
 											<div className="text-gray-700 text-xl">
 												<div className="flex items-baseline space-x-1">
-													<div className="truncate leading-normal">{nft.rental_value}</div>
+													<div className="truncate leading-normal">{nft.rental_eth}</div>
 													<img className='h-3' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
 													</div>
 													<div className="text-xs text-gray-500 truncate">

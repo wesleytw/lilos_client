@@ -7,7 +7,6 @@ export const fetchUrl = async (url) => {
     if (!url) {
       console.log("url err", url);
       return url
-
     } else if (url.includes("ipfs://")) {
       const ipfsGate = url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
       const fetchIt = await axios.get(`${corsURL}${ipfsGate}`, {})
@@ -21,7 +20,6 @@ export const fetchUrl = async (url) => {
       const corsURL = 'https://cors-anywhere.herokuapp.com/';
       const fetchIt = await axios.get(`${corsURL}${url}`, {})
       return fetchIt.data
-
     }
   } catch (error) {
     console.log("fetch err")
