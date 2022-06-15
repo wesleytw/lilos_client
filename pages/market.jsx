@@ -33,23 +33,18 @@ const Market = () => {
 		const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
 		const getActiveItems = await marketContract.getActiveItems()
 		const time = await marketContract.getTime()
-console.log("ttt",time.toNumber())
-// const blockNumBefore = await ethers.provider.getBlockNumber();
-// const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-// const timestampBefore = blockBefore.timestamp;
-// console.log("ttt",timestampBefore)
+		console.log("blocktime(sec)", time.toNumber())
 		const items = await Promise.all(getActiveItems?.map(async i => {
 
 			const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
 			const tokenUri = await tokenContract.tokenURI(i.tokenId)
 			const name = await tokenContract.name()
 			const meta = await fetchUrl(tokenUri)
-			console.log("call fetch url",tokenUri,meta)
 			const img = await resolveImg(meta?.image)
 			const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
-			const day = parseInt(i.lease_term/24/3600)
-			const hour = parseInt(i.lease_term/3600)%24
-			const min = parseInt(i.lease_term/60)%60
+			const day = parseInt(i.lease_term / 24 / 3600)
+			const hour = parseInt(i.lease_term / 3600) % 24
+			const min = parseInt(i.lease_term / 60) % 60
 			let item = {
 				listingId: i.listingId.toNumber(),
 				status: i.status,
@@ -142,9 +137,9 @@ console.log("ttt",time.toNumber())
 												<div className="flex items-baseline space-x-1">
 													<div className="truncate leading-normal">{nft.rental_eth}</div>
 													<img className='h-3' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
-													</div>
-													<div className="text-xs text-gray-500 truncate">
-													~ {(nft.rental_gwei/nft.lease_term).toFixed(1)}    gwei/sec
+												</div>
+												<div className="text-xs text-gray-500 truncate">
+													~ {(nft.rental_gwei / nft.lease_term).toFixed(1)}    gwei/sec
 													</div>
 											</div>
 										</div>
@@ -154,11 +149,11 @@ console.log("ttt",time.toNumber())
 											<div className="text-gray-700 text-2xl">
 												<div className="flex items-baseline space-x-1">
 													<div className="font-mono truncate leading-normal text-lg">{nft.day}</div>
-													<div className="font-mono text-sm">days</div> 
+													<div className="font-mono text-sm">days</div>
 													<div className="font-mono truncate leading-normal text-lg">{nft.hour}</div>
-													<div className="font-mono text-sm">hours</div> 
+													<div className="font-mono text-sm">hours</div>
 													<div className="font-mono truncate leading-normal text-lg">{nft.min}</div>
-													<div className="font-mono text-sm">mins</div> 
+													<div className="font-mono text-sm">mins</div>
 												</div>
 											</div>
 										</div>

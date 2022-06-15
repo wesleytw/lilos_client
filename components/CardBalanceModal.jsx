@@ -17,6 +17,7 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
   const [collateral, setCollateral] = useState(0);
   const [rent, setRent] = useState(0);
   const [loading, setLoading] = useState("");
+  // const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
   function dayChange(e) { setDay(e.target.value); }
   function hourChange(e) { setHour(e.target.value); }
   function minsChange(e) { setMin(e.target.value); }
@@ -113,6 +114,10 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
               <h1 className="text-3xl font-BADABB">{cardInfo?.name}</h1>
               <p>lessor: {shortenAddress(cardInfo?.owner_of)}</p>
               <p>token_Id #{cardInfo?.token_id}</p>
+              <a href={`${"https://testnets.opensea.io/assets/rinkeby/" + cardInfo?.token_address + "/" + cardInfo?.token_id}`} target="_blank" rel="noopener noreferrer">
+                <img className=" h-8 shadow-sm hover:shadow-lg z-50 rounded-full" src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.png" />
+              </a>
+              {/* <p>collection #{cardInfo?.token_id}</p> */}
               <div className="flex justify-evenly items-center p-2 pt-0 my-3 border-2 rounded-xl">
                 <h1 className=" text-[#00000094]">lease term</h1>
                 <div className="flex-col justify-center items-center text-center">

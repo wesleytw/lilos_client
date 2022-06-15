@@ -10,7 +10,6 @@ export const fetchUrl = async (url) => {
     } else if (url.includes("ipfs://")) {
       const ipfsGate = url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
       const fetchIt = await axios.get(ipfsGate, {})
-      // const fetchIt = await axios.get(`${corsURL}${ipfsGate}`, {})
       return fetchIt.data
 
     } else if (url.includes("base64")) {
@@ -18,24 +17,18 @@ export const fetchUrl = async (url) => {
       return JSON.parse(await decode(base64))
 
     } else {
-      const corsURL = 'https://cors-anywhere.herokuapp.com/';
-      // const fetchIt = await axios.get(`${corsURL}${url}`, {})
-      const fetchIt = await axios.get(url, {})
-      console.log("fetch url error",url)
+      const corsURL = 'https://my-cors-proxy-wesley.herokuapp.com/';
+      const fetchIt = await axios.get(`${corsURL}${url}`, {})
       return fetchIt.data
     }
   } catch (error) {
-    console.log("fetch err".url)
+    console.log("fetch url err".url)
   }
 }
 
 export const resolveImg = async (img) => {
   try {
-    if (!img) {
-      console.log("fetch img err", img);
-      return img
-
-    } else if (img.includes("ipfs://")) {
+    if (img.includes("ipfs://")) {
       const ipfsGate = img.replace("ipfs://", "https://gateway.ipfs.io/ipfs/")
       return ipfsGate
 
@@ -43,7 +36,7 @@ export const resolveImg = async (img) => {
       return img
     }
   } catch (error) {
-    console.log("resolveImg error",img)
+    console.log("fetch img error",img)
   }
 }
 
