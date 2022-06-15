@@ -44,6 +44,7 @@ console.log("ttt",time.toNumber())
 			const tokenUri = await tokenContract.tokenURI(i.tokenId)
 			const name = await tokenContract.name()
 			const meta = await fetchUrl(tokenUri)
+			console.log("call fetch url",tokenUri,meta)
 			const img = await resolveImg(meta?.image)
 			const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
 			const day = parseInt(i.lease_term/24/3600)

@@ -46,7 +46,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
     const totalValue = cardInfo.collateral_value.add(cardInfo.rental_value)
     try {
       setLoading("leasing")
-      console.log("msg eth",totalValue)
+      console.log("totalValue",totalValue)
       const transaction = await marketContract.leaseIn(cardInfo.listingId, {
         value: totalValue
       })
@@ -142,8 +142,8 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                   </div>
                 </div>
                 {!signer ? (
-                  <div class="badge badge-warning gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                  <div className="badge badge-warning gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-4 h-4 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   Please connect wallet
                   </div>
                 ) : (
