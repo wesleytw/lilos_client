@@ -53,10 +53,10 @@ module.exports = {
         mytheme: {
           "primary": "#000",
           "secondary": "#c9384b",
-          "accent": "#0057ff",
-          "neutral": "#2E1B32",
+          "accent": "#252525",
+          "neutral": "#cccccc",
           "base-100": "#EAE5EB",
-          "info": "#55AEDD",
+          "info": "#0057ff",
           "success": "#15935A",
           "warning": "#F0AB0A",
           "error": "#3b82f680",

@@ -1,13 +1,8 @@
 // make index for these components
-export {default as Loader} from './Loader';
 export {default as Footer} from './Footer';
 export {default as Welcome} from './Welcome';
-export {default as Navbar} from './Navbar';
 export {default as Nav} from './Nav';
-export {default as Transactions} from './Transactions';
-export {default as Services} from './Services';
-export {default as NftCard} from './NftCard';
-export {default as Account} from './Account';
-export {default as Market} from './Market';
-export {default as CardModal} from './CardModal';
-export {default as CardBalanceModal} from './CardBalanceModal';
+export {default as ModalMarket} from './ModalMarket';
+export {default as ModalNative} from './ModalNative';
+export {default as CardNative} from './CardNative';
+export {default as CardLeaseIn} from './CardLeaseIn';

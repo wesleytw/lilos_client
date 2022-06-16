@@ -7,7 +7,7 @@ import { marketAddress } from '../src/constant'
 import { MdOutlineVerified } from "react-icons/md";
 import { shortenAddress } from "../src/utils/shortenAddress";
 
-const CardModal = ({ cardInfo, currentAccount }) => {
+const ModalMarket = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState("");
@@ -67,13 +67,13 @@ const CardModal = ({ cardInfo, currentAccount }) => {
     }
   }
 
-  let listbtn
+  let btnAction
   if (loading == "") {
-    listbtn = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => leaseIn()}>least in</button>
+    btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => leaseIn()}>least in</button>
   } else if (loading == "leasing") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => leaseIn()}>leasing</button>
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => leaseIn()}>leasing</button>
   } else if (loading == "done") {
-    listbtn = <div class="badge badge-lg badge-success text-sm p-3">Successfully leased 🎉</div>
+    btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully leased 🎉</div>
   }
 
   return (
@@ -148,7 +148,7 @@ const CardModal = ({ cardInfo, currentAccount }) => {
                   </div>
                 ) : (
                   <div className="mt-6 flex justify-center">
-                    {listbtn}
+                    {btnAction}
                   </div>
                 )
                 }
@@ -161,6 +161,6 @@ const CardModal = ({ cardInfo, currentAccount }) => {
   )
 };
 
-export default CardModal;
+export default ModalMarket;
 
 

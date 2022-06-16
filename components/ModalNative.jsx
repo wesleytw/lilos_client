@@ -6,8 +6,7 @@ import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
 import { shortenAddress } from "../src/utils/shortenAddress";
 
-
-const CardBalanceModal = ({ cardInfo, currentAccount }) => {
+const ModalNative = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
   const [account, setAccount] = useState();
   const [error, setError] = useState("");
@@ -17,7 +16,7 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
   const [collateral, setCollateral] = useState(0);
   const [rent, setRent] = useState(0);
   const [loading, setLoading] = useState("");
-  // const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
+
   function dayChange(e) { setDay(e.target.value); }
   function hourChange(e) { setHour(e.target.value); }
   function minsChange(e) { setMin(e.target.value); }
@@ -79,7 +78,6 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
         await transaction.wait()
         console.log("listed")
         setLoading("done")
-        // window.location.reload()
       } catch (error) {
         setLoading("")
         alert(error)
@@ -88,15 +86,15 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
 
   }
 
-  let listbtn
+  let btnAction
   if (loading == "") {
-    listbtn = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => list()}>List</button>
+    btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => list()}>List</button>
   } else if (loading == "approving") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>approving</button>
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>approving</button>
   } else if (loading == "listing") {
-    listbtn = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>listing</button>
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>listing</button>
   } else if (loading == "done") {
-    listbtn = <div class="badge badge-lg badge-success text-sm p-3">Successfully listed 🎉</div>
+    btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully listed 🎉</div>
   }
 
   return (
@@ -148,7 +146,7 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
                 </div>
               ) : (
                 <div className="mt-6 flex justify-center">
-                  {listbtn}
+                  {btnAction}
                 </div>
               )
               }
@@ -160,6 +158,6 @@ const CardBalanceModal = ({ cardInfo, currentAccount }) => {
   )
 };
 
-export default CardBalanceModal;
+export default ModalNative;
 
 
