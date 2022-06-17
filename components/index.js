@@ -5,4 +5,5 @@ export {default as Nav} from './Nav';
 export {default as ModalMarket} from './ModalMarket';
 export {default as ModalNative} from './ModalNative';
 export {default as CardNative} from './CardNative';
-export {default as CardLeaseIn} from './CardLeaseIn';
+export {default as CardLeaseIn} from './CardLeasedIn';
+export {default as ModalLeaseIn} from './ModalLeasedIn';

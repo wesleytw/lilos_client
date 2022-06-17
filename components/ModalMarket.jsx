@@ -90,7 +90,7 @@ const ModalMarket = ({ cardInfo, currentAccount }) => {
             <div className="h-[400px] w-3/5 px-16 pt-2 overflow-scroll">
               <div className="flex justify-center p-5">
                 <h1 className="text-3xl font-BADABB ">{cardInfo?.name} #{cardInfo?.tokenId}</h1>
-                {verifyCollection(cardInfo?.collection) &&
+                {cardInfo?.verifyCollection &&
                   <div className="pl-2">
                     <MdOutlineVerified title="Verified Collection👌" fontSize={15} color="#000" />
                   </div>

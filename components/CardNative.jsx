@@ -32,20 +32,40 @@ const CardNative = ({ currentAccount }) => {
     const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
     await Promise.all(data?.result.map(async i => {
       const getItemByCollctionAndTokenId = await marketContract.getItemByCollctionAndTokenId(i.token_address, i.token_id)
-      if (getItemByCollctionAndTokenId?.status !== 1 && i.contract_type == "ERC721") {
+      // if (getItemByCollctionAndTokenId.status !== 2 && i.contract_type == "ERC721") {
+      if (i.contract_type == "ERC721") {
         const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.token_address + "/" + i.token_id
+        const day = parseInt(i.lease_term / 24 / 3600)
+        const hour = parseInt(i.lease_term / 3600) % 24
+        const min = parseInt(i.lease_term / 60) % 60
         let item = {
+          listingId: getItemByCollctionAndTokenId.listingId.toNumber(),
           name: i.name,
+          status: getItemByCollctionAndTokenId.status,
           token_address: i.token_address,
           token_id: i.token_id,
           image: i.image,
-          openseaLink: openseaLink
+          openseaLink: openseaLink,
+          collateral_value: getItemByCollctionAndTokenId.collateral_value,
+          collateral_eth: ethers.utils.formatEther(getItemByCollctionAndTokenId.collateral_value),
+          collateral_gwei: ethers.utils.formatUnits(getItemByCollctionAndTokenId.collateral_value, "gwei"),
+          rental_value: getItemByCollctionAndTokenId.rental_value,
+          rental_eth: ethers.utils.formatEther(getItemByCollctionAndTokenId.rental_value),
+          rental_gwei: ethers.utils.formatUnits(getItemByCollctionAndTokenId.rental_value, "gwei"),
+          lease_term: getItemByCollctionAndTokenId.lease_term.toNumber(),
+          day: day,
+          hour: hour,
+          min: min,
+          lease_start_date: getItemByCollctionAndTokenId.lease_start_date.toNumber(),
+          lease_end_date: getItemByCollctionAndTokenId.lease_end_date.toNumber(),
+          verifyCollection: verifyCollection(i.token_address)
         }
         nftsData.push(item)
       }
+      console.log("getItemByCollctionAndTokenId.status", getItemByCollctionAndTokenId)
     }))
     setNfts(nftsData)
-    console.log("nfts",nftsData)
+    console.log("nfts", nftsData)
   }
 
   const verifyCollection = (tokenAddress) => {
@@ -70,7 +90,7 @@ const CardNative = ({ currentAccount }) => {
                         <p className="  text-black text-xl font-bold truncate">
                           {`${nft.name}`}
                         </p>
-                        {verifyCollection(nft.token_address) &&
+                        {nft?.verifyCollection &&
                           <div>
                             <MdOutlineVerified title="Verified Collection👌" fontSize={15} color="#000" />
                           </div>
@@ -82,12 +102,21 @@ const CardNative = ({ currentAccount }) => {
                     </div>
                     <img className="object-contain w-full h-48 " src={nft.image} alt={nft.name} />
                     {/* <div className="px-6 py-4 "> */}
-                      {/* <h4 className="mb-3 text-xl font-semibold tracking-tight text-gray-800 break-words truncate">{`${nft.name}`} </h4> */}
-                      {/* <p className="leading-normal text-gray-700 flex-wrap truncate">{`${shortenAddress(nft.owner_of)}`}</p> */}
+                    {/* <h4 className="mb-3 text-xl font-semibold tracking-tight text-gray-800 break-words truncate">{`${nft.name}`} </h4> */}
+                    {/* <p className="leading-normal text-gray-700 flex-wrap truncate">{`${shortenAddress(nft.owner_of)}`}</p> */}
                     {/* </div> */}
                   </div>
-                  <div className="px-6 relative mt-1">
-                    <div className="flex justify-end md:items-baseline">
+                  <div className="px-5 pb-3 mt-1">
+                    <div className="flex justify-between ">
+                      <div>
+                        {nft.status == 1 &&
+                          <div class="badge badge-info h-6 gap-2 ">
+                            <span class=" w-2.5 h-2.5 bg-green-600 rounded-full flex items-center justify-center ">
+                              <div class="w-2.5 h-2.5 animate-ping bg-green-600/75 rounded-full "></div>
+                            </span>
+                            listed
+                          </div>}
+                      </div>
                       <label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:btn-secondary">
                         View
   										</label>

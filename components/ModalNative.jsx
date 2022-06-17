@@ -5,6 +5,8 @@ import market from '../src/abi/Lilos_V1.json'
 import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
 import { shortenAddress } from "../src/utils/shortenAddress";
+import { MdOutlineVerified } from "react-icons/md";
+
 
 const ModalNative = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
@@ -15,7 +17,7 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
   const [min, setMin] = useState(0);
   const [collateral, setCollateral] = useState(0);
   const [rent, setRent] = useState(0);
-  const [loading, setLoading] = useState("");
+  const [btnState, setBtnState] = useState("");
 
   function dayChange(e) { setDay(e.target.value); }
   function hourChange(e) { setHour(e.target.value); }
@@ -42,7 +44,11 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
 
   useEffect(() => {
     connectWallet()
-    setLoading("")
+    if (cardInfo?.status == 0){
+      setBtnState("list")
+    } else if (cardInfo?.status == 1){
+      setBtnState("delist")
+    }
   }, [cardInfo])
 
   async function list() {
@@ -56,45 +62,64 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
     // const leaseTermHex = ethers.utils.parseUnits(leaseTerm.toString(), 'wei')
     if (!isApprovedForAll) {
       try {
-        setLoading("approving")
+        setBtnState("approving")
         const approveBool = true
         const setApprovalForAll = await erc721Contract.setApprovalForAll(marketAddress, approveBool)
         await setApprovalForAll.wait()
         console.log("approved")
-        setLoading("listing")
+        setBtnState("listing")
         const transaction = await marketContract.listToken(cardInfo.token_address, cardInfo.token_id, collateralHex, rentHex, leaseTermHex)
         await transaction.wait()
         console.log("listed")
-        setLoading("done")
+        setBtnState("listed")
         // window.location.reload()
       } catch (error) {
-        setLoading("")
+        setBtnState("list")
         alert(error)
       }
     } else {
       try {
-        setLoading("listing")
+        setBtnState("listing")
         const transaction = await marketContract.listToken(cardInfo.token_address, cardInfo.token_id, collateralHex, rentHex, leaseTermHex)
         await transaction.wait()
         console.log("listed")
-        setLoading("done")
+        setBtnState("listed")
       } catch (error) {
-        setLoading("")
+        setBtnState("list")
         alert(error)
       }
     }
+  }
 
+  async function delist() {
+    const marketContract = new ethers.Contract(marketAddress, market.abi, signer)
+    try {
+      setBtnState("delisting")
+      const transaction = await marketContract.delist(cardInfo.listingId)
+      await transaction.wait()
+      console.log("delisted")
+      setBtnState("delisted")
+    } catch (error) {
+      setBtnState("delist")
+      alert(error)
+    }
   }
 
   let btnAction
-  if (loading == "") {
+  if (btnState == "list") {
     btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => list()}>List</button>
-  } else if (loading == "approving") {
-    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>approving</button>
-  } else if (loading == "listing") {
-    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => list()}>listing</button>
-  } else if (loading == "done") {
+  } else if (btnState == "delist") {
+    btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => delist()}>delist</button>
+  } else if (btnState == "approving") {
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" >approving</button>
+  } else if (btnState == "listing") {
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" >listing</button>
+  } else if (btnState == "listed") {
     btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully listed 🎉</div>
+  } else if (btnState == "delisting") {
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" >delisting</button>
+  } else if (btnState == "delisted") {
+    btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully delisted 🎉</div>
   }
 
   return (
@@ -108,40 +133,55 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
             <div className=' w-2/5 overflow-hidden object-cover '>
               <img className='object-cover' src={cardInfo?.image}></img>
             </div>
-            <div className="h-[400px] w-3/5 px-16 pt-3 overflow-scroll">
-              <h1 className="text-3xl font-BADABB">{cardInfo?.name}</h1>
-              <p>lessor: {shortenAddress(cardInfo?.owner_of)}</p>
-              <p>token_Id #{cardInfo?.token_id}</p>
+            <div className="h-[450px] w-3/5 px-16 pt-3 overflow-scroll">
+              <div className="flex justify-center p-5">
+                <h1 className="text-3xl font-BADABB ">{cardInfo?.name} #{cardInfo?.token_id}</h1>
+                {cardInfo?.verifyCollection &&
+                  <div className="pl-2">
+                    <MdOutlineVerified title="Verified Collection👌" fontSize={15} color="#000" />
+                  </div>
+                }
+              </div>
+              {/* <p>lessor: {shortenAddress(cardInfo?.owner_of)}</p> */}
               <a href={`${"https://testnets.opensea.io/assets/rinkeby/" + cardInfo?.token_address + "/" + cardInfo?.token_id}`} target="_blank" rel="noopener noreferrer">
                 <img className=" h-8 shadow-sm hover:shadow-lg z-50 rounded-full" src="https://storage.googleapis.com/opensea-static/Logomark/Logomark-White.png" />
               </a>
               {/* <p>collection #{cardInfo?.token_id}</p> */}
-              <div className="flex justify-evenly items-center p-2 pt-0 my-3 border-2 rounded-xl">
-                <h1 className=" text-[#00000094]">lease term</h1>
-                <div className="flex-col justify-center items-center text-center">
-                  <h1 className="text-sm text-[#00000083]">day</h1>
-                  <input type="number" min="0" max="9" value={day} onChange={dayChange} placeholder="D" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
-                </div>
-                <div className="flex-col justify-center items-center text-center">
-                  <h1 className="text-sm text-[#00000083]">hour</h1>
-                  <input type="number" min="0" max="23" value={hour} onChange={hourChange} placeholder="H" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
-                </div>
-                <div className="flex-col justify-center items-center text-center">
-                  <h1 className="text-sm text-[#00000083]">min</h1>
-                  <input type="number" min="2" max="60" value={min} onChange={minsChange} placeholder="M" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
-                </div>
-              </div>
-              <div className="flex justify-between items-center text-center px-6 pb-2">
-                <h1 className="text-sm text-[#00000083]">collateral (eth)</h1>
-                <input type="number" min="1" max="60" value={collateral} onChange={collateralChange} placeholder="collateral" className="input input-bordered max-w-xs px-1 w-32 bg-white font-bold rounded-5xl" />
-              </div>
-              <div className="flex justify-between items-center text-center px-6 pb-2">
-                <h1 className="text-sm text-[#00000083]">rent (eth)</h1>
-                <input type="number" min="1" max="60" value={rent} onChange={rentChange} placeholder="rent" className="input input-bordered max-w-xs px-1 w-32 bg-white font-bold rounded-5xl" />
-              </div>
+              {cardInfo?.status == 0 ? (
+                <>
+                  <div className="flex justify-evenly items-center p-2 pt-0 my-3 border-2 rounded-xl">
+                    <h1 className=" text-[#00000094]">lease term</h1>
+                    <div className="flex-col justify-center items-center text-center">
+                      <h1 className="text-sm text-[#00000083]">day</h1>
+                      <input type="number" min="0" max="9" value={day} onChange={dayChange} placeholder="D" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
+                    </div>
+                    <div className="flex-col justify-center items-center text-center">
+                      <h1 className="text-sm text-[#00000083]">hour</h1>
+                      <input type="number" min="0" max="23" value={hour} onChange={hourChange} placeholder="H" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
+                    </div>
+                    <div className="flex-col justify-center items-center text-center">
+                      <h1 className="text-sm text-[#00000083]">min</h1>
+                      <input type="number" min="2" max="60" value={min} onChange={minsChange} placeholder="M" className="input input-bordered w-11 h-9 max-w-xs px-1 bg-white font-bold rounded-5xl" />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center text-center px-6 pb-2">
+                    <h1 className="text-sm text-[#00000083]">collateral (eth)</h1>
+                    <input type="number" min="1" max="60" value={collateral} onChange={collateralChange} placeholder="collateral" className="input input-bordered max-w-xs px-1 w-32 bg-white font-bold rounded-5xl" />
+                  </div>
+                  <div className="flex justify-between items-center text-center px-6 pb-2">
+                    <h1 className="text-sm text-[#00000083]">rent (eth)</h1>
+                    <input type="number" min="1" max="60" value={rent} onChange={rentChange} placeholder="rent" className="input input-bordered max-w-xs px-1 w-32 bg-white font-bold rounded-5xl" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>{cardInfo?.lease_term}</p>
+                </>
+              )
+              }
               {!signer ? (
-                <div class="badge badge-warning gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-4 h-4 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <div className="badge badge-warning gap-2 mt-6 flex justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-4 h-4 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   Please connect wallet
                 </div>
               ) : (
