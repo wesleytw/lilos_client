@@ -89,7 +89,7 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
   } else if (btnState == "repaid") {
     btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully repaid 🎉</div>
   } else if (btnState == "approving") {
-    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => repay()}>leasing</button>
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => repay()}>approving</button>
   }
 
   return (
@@ -127,7 +127,7 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="block pb-2">
+                  <div className="pb-2">
                     <p className="text-gray-800 text-sm">
                       Rent </p>
                     <div className="text-gray-700 text-2xl">
@@ -143,7 +143,7 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
 										</div> */}
                     </div>
                   </div>
-                  <div className="block pb-2">
+                  <div className="pb-2">
                     <p className="text-gray-800 text-sm">
                       Lease term </p>
                     <p className="text-gray-800 text-sm">

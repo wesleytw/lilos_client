@@ -33,7 +33,7 @@ const CardNative = ({ currentAccount }) => {
     await Promise.all(data?.result.map(async i => {
       const getItemByCollctionAndTokenId = await marketContract.getItemByCollctionAndTokenId(i.token_address, i.token_id)
       // if (getItemByCollctionAndTokenId.status !== 2 && i.contract_type == "ERC721") {
-      if (i.contract_type == "ERC721") {
+      if (i.contract_type == "ERC721" && getItemByCollctionAndTokenId.status == 0) {
         const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.token_address + "/" + i.token_id
         const day = parseInt(i.lease_term / 24 / 3600)
         const hour = parseInt(i.lease_term / 3600) % 24
@@ -62,10 +62,8 @@ const CardNative = ({ currentAccount }) => {
         }
         nftsData.push(item)
       }
-      console.log("getItemByCollctionAndTokenId.status", getItemByCollctionAndTokenId)
     }))
     setNfts(nftsData)
-    console.log("nfts", nftsData)
   }
 
   const verifyCollection = (tokenAddress) => {
@@ -115,7 +113,8 @@ const CardNative = ({ currentAccount }) => {
                               <div class="w-2.5 h-2.5 animate-ping bg-green-600/75 rounded-full "></div>
                             </span>
                             listed
-                          </div>}
+                          </div>
+                        }
                       </div>
                       <label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:btn-secondary">
                         View

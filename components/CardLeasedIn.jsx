@@ -10,65 +10,66 @@ import { marketAddress } from '../src/constant'
 
 
 const CardLeasedIn = ({ data, currentAccount }) => {
-  const [nfts, setNfts] = useState([]);
-  const [cardInfo, setcardInfo] = useState();
-  const nftsData = []
+	const [nfts, setNfts] = useState([]);
+	const [cardInfo, setcardInfo] = useState();
+	const nftsData = []
 
-  useEffect(() => {
-    if (!currentAccount) return
-    fetchWeb3Items();
-  }, [currentAccount])
+	useEffect(() => {
+		if (!currentAccount) return
+		fetchWeb3Items();
+	}, [currentAccount])
 
-  async function fetchWeb3Items() {
-    const provider = new ethers.providers.InfuraProvider('rinkeby', "fed1ef26af5648de8dea5d37316687db");
-    const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
-    const getItemsByLessee = await marketContract.getItemsByLessee(currentAccount)
-    const items = await Promise.all(getItemsByLessee?.map(async i => {
-			const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
-			const tokenUri = await tokenContract.tokenURI(i.tokenId)
-			const name = await tokenContract.name()
-			const meta = await fetchUrl(tokenUri)
-			const img = await resolveImg(meta?.image)
-			const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
-			const day = parseInt(i.lease_term / 24 / 3600)
-			const hour = parseInt(i.lease_term / 3600) % 24
-			const min = parseInt(i.lease_term / 60) % 60
-			let item = {
-				listingId: i.listingId.toNumber(),
-				status: i.status,
-				lessor: i.lessor,
-				lessee: i.lessee,
-				collection: i.collection,
-				name: name,
-				tokenId: i.tokenId.toNumber(),
-				image: img,
-        collateral_value: i.collateral_value,
-				collateral_eth: ethers.utils.formatEther(i.collateral_value),
-				collateral_gwei: ethers.utils.formatUnits(i.collateral_value, "gwei"),
-				rental_value: i.rental_value,
-				rental_eth: ethers.utils.formatEther(i.rental_value),
-				rental_gwei: ethers.utils.formatUnits(i.rental_value, "gwei"),
-				lease_term: i.lease_term.toNumber(),
-				day: day,
-				hour: hour,
-				min: min,
-				lease_start_date: i.lease_start_date.toNumber(),
-				lease_end_date: i.lease_end_date.toNumber(),
-				openseaLink: openseaLink
+	async function fetchWeb3Items() {
+		const provider = new ethers.providers.InfuraProvider('rinkeby', "fed1ef26af5648de8dea5d37316687db");
+		const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
+		const getItemsByLessee = await marketContract.getItemsByLessee(currentAccount)
+		await Promise.all(getItemsByLessee?.map(async i => {
+			if (i.status == 2) {
+				const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
+				const tokenUri = await tokenContract.tokenURI(i.tokenId)
+				const name = await tokenContract.name()
+				const meta = await fetchUrl(tokenUri)
+				const img = await resolveImg(meta?.image)
+				const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.collection + "/" + i.tokenId
+				const day = parseInt(i.lease_term / 24 / 3600)
+				const hour = parseInt(i.lease_term / 3600) % 24
+				const min = parseInt(i.lease_term / 60) % 60
+				let item = {
+					listingId: i.listingId.toNumber(),
+					lessor: i.lessor,
+					lessee: i.lessee,
+					collection: i.collection,
+					name: name,
+					tokenId: i.tokenId.toNumber(),
+					image: img,
+					collateral_value: i.collateral_value,
+					collateral_eth: ethers.utils.formatEther(i.collateral_value),
+					collateral_gwei: ethers.utils.formatUnits(i.collateral_value, "gwei"),
+					rental_value: i.rental_value,
+					rental_eth: ethers.utils.formatEther(i.rental_value),
+					rental_gwei: ethers.utils.formatUnits(i.rental_value, "gwei"),
+					lease_term: i.lease_term.toNumber(),
+					day: day,
+					hour: hour,
+					min: min,
+					lease_start_date: i.lease_start_date.toNumber(),
+					lease_end_date: i.lease_end_date.toNumber(),
+					openseaLink: openseaLink
+				}
+				nftsData.push(item)
 			}
-			return item;
 		}))
-		setNfts(items)
-  }
+		setNfts(nftsData)
+	}
 
-  const verifyCollection = (tokenAddress) => {
-    if (tokenAddress == "0x3bed33dab84a9415198d3fdb452e94829e16c1b6") {
-      return true
-    } else {
-      return false
-    }
-  }
-  return (
+	const verifyCollection = (tokenAddress) => {
+		if (tokenAddress == "0x3bed33dab84a9415198d3fdb452e94829e16c1b6") {
+			return true
+		} else {
+			return false
+		}
+	}
+	return (
 		<>
 			<div className="w-screen mt-12 pt-12 px-5 overflow-y-auto flex flex-wrap ">
 				{nfts && nfts.map(nft => (
@@ -157,7 +158,7 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 					</div>
 				))}
 			</div>
-      {console.log(cardInfo)}
+			{console.log(cardInfo)}
 			<ModalLeaseIn cardInfo={cardInfo} currentAccount={currentAccount} />
 		</>
 	)
