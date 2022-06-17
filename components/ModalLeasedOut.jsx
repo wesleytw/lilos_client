@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Web3Modal from 'web3modal'
 import { ethers } from 'ethers'
 import market from '../src/abi/Lilos_V1.json'
-import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
 import { MdOutlineVerified } from "react-icons/md";
 import { shortenAddress } from "../src/utils/shortenAddress";
@@ -30,7 +29,7 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
   };
   useEffect(() => {
     connectWallet()
-    setBtnState("repay")
+    setBtnState("liquidate")
     // let stamp = 1578162600000
     let stamp = 1654505760 * 1000 //normal(java) timestamp is in milliseconds, but block.timestamp is in seconds.
     let time = new Date(stamp)
@@ -42,29 +41,15 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
   }, [cardInfo])
 
 
-  async function repay() {
+  async function liquidate() {
     const marketContract = new ethers.Contract(marketAddress, market.abi, signer)
-    const erc721Contract = new ethers.Contract(cardInfo.collection.toString(), erc721.abi, signer)
-    const isApprovedForAll = await erc721Contract.isApprovedForAll(currentAccount, marketAddress)
-    if (!isApprovedForAll) {
-      try {
-        setBtnState("approving")
-        const approveBool = true
-        const setApprovalForAll = await erc721Contract.setApprovalForAll(marketAddress, approveBool)
-        await setApprovalForAll.wait()
-      } catch (error) {
-        setBtnState("repay")
-        alert(error)
-        console.log(error)
-      }
-    }
     try {
-      setBtnState("repaying")
-      const repay = await marketContract.repay(cardInfo.listingId)
-      await repay.wait()
-      setBtnState("repaid")
+      setBtnState("liquidating")
+      const liquidate = await marketContract.liquidate(cardInfo.listingId)
+      await liquidate.wait()
+      setBtnState("liquidated")
     } catch (error) {
-      setBtnState("repay")
+      setBtnState("liquidate")
       alert(error)
     }
 
@@ -79,15 +64,13 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
   }
 
   let btnAction
-  if (btnState == "repay") {
-    btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => repay()}>repay</button>
-  } else if (btnState == "repaying") {
-    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => repay()}>repaying</button>
-  } else if (btnState == "repaid") {
-    btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully repaid 🎉</div>
-  } else if (btnState == "approving") {
-    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary" onClick={() => repay()}>approving</button>
-  }
+  if (btnState == "liquidate") {
+    btnAction = <button className="btn text-white btn-primary border-none justify-center hover:btn-secondary " onClick={() => liquidate()}>liquidate</button>
+  } else if (btnState == "liquidating") {
+    btnAction = <button className="btn loading text-white btn-primary border-none justify-center hover:btn-secondary">liquidating</button>
+  } else if (btnState == "liquidated") {
+    btnAction = <div class="badge badge-lg badge-success text-sm p-3">Successfully liquidated 🎉</div>
+  } 
 
   return (
     <>

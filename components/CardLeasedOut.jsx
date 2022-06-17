@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ModalLeasedIn } from ".";
+import { ModalLeasedOut } from ".";
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { fetchUrl, resolveImg } from '../src/utils/fetchUrl'
 import { MdOutlineVerified } from "react-icons/md";
@@ -7,11 +7,12 @@ import { ethers } from 'ethers'
 import market from '../src/abi/Lilos_V1.json'
 import erc721 from '../src/abi/ILOVENTHU.json'
 import { marketAddress } from '../src/constant'
+import ModalLeasedIn from "./ModalLeasedIn";
 
 
-const CardLeasedIn = ({ data, currentAccount }) => {
-	const [nfts, setNfts] = useState([]);
-	const [cardInfo, setcardInfo] = useState();
+const CardLeasedOut = ({ data, currentAccount }) => {
+	const [nfts, setNfts] = useState([])
+	const [cardInfo, setcardInfo] = useState()
 	const nftsData = []
 
 	useEffect(() => {
@@ -22,8 +23,9 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 	async function fetchWeb3Items() {
 		const provider = new ethers.providers.InfuraProvider('rinkeby', "fed1ef26af5648de8dea5d37316687db");
 		const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
-		const getItemsByLessee = await marketContract.getItemsByLessee(currentAccount)
-		await Promise.all(getItemsByLessee?.map(async i => {
+		const getItemsByLessor = await marketContract.getItemsByLessor(currentAccount)
+		const getTime = await marketContract.getTime()
+		await Promise.all(getItemsByLessor?.map(async i => {
 			if (i.status == 2) {
 				const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
 				const tokenUri = await tokenContract.tokenURI(i.tokenId)
@@ -54,7 +56,8 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 					min: min,
 					lease_start_date: i.lease_start_date.toNumber(),
 					lease_end_date: i.lease_end_date.toNumber(),
-					openseaLink: openseaLink
+					openseaLink: openseaLink,
+					getTime: getTime.toNumber()
 				}
 				nftsData.push(item)
 			}
@@ -71,7 +74,7 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 	}
 	return (
 		<>
-      <div className="w-screen py-16 overflow-y-auto flex flex-wrap ">
+			<div className="w-screen py-16 overflow-y-auto flex flex-wrap ">
 				{nfts && nfts.map(nft => (
 					<div key={`${nft.tokenId} ${nft.collection}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
 						<div className="w-full m-auto">
@@ -145,9 +148,28 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 												</div>
 											</div>
 										</div>
-										<div className="flex justify-end p-3 md:items-baseline">
+										{nft.lease_end_date}h{nft.getTime}
+										<div className="flex justify-between p-3 ">
+											<div>
+												{nft.lease_end_date > nft.getTime &&
+													<div class="badge badge-info h-6 gap-2 border-0 text-[#14a452]">
+														<span class=" w-2.5 h-2.5 bg-green-600 rounded-full flex items-center justify-center ">
+															<div class="w-2.5 h-2.5 animate-ping bg-green-600/75 rounded-full "></div>
+														</span>
+                            on going
+                          </div>
+												}
+												{nft.lease_end_date < nft.getTime &&
+													<div class="badge badge-error h-6 gap-2 border-0 text-[#f31260]">
+														<span class=" w-2.5 h-2.5 bg-red-600 rounded-full flex items-center justify-center ">
+															<div class="w-2.5 h-2.5 animate-ping bg-red-600/75 rounded-full "></div>
+														</span>
+                            expired
+                          </div>
+												}
+											</div>
 											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:bg-secondary">
-												Repay
+												Liquidate
 											</label>
 										</div>
 									</div>
@@ -159,9 +181,9 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 				))}
 			</div>
 			{console.log(cardInfo)}
-			<ModalLeasedIn cardInfo={cardInfo} currentAccount={currentAccount} />
+			<ModalLeasedOut cardInfo={cardInfo} currentAccount={currentAccount} />
 		</>
 	)
 }
 
-export default CardLeasedIn
+export default CardLeasedOut

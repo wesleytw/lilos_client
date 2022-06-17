@@ -33,7 +33,7 @@ const CardNative = ({ currentAccount }) => {
     await Promise.all(data?.result.map(async i => {
       const getItemByCollctionAndTokenId = await marketContract.getItemByCollctionAndTokenId(i.token_address, i.token_id)
       // if (getItemByCollctionAndTokenId.status !== 2 && i.contract_type == "ERC721") {
-      if (i.contract_type == "ERC721" && getItemByCollctionAndTokenId.status == 0) {
+      if (i.contract_type == "ERC721" && getItemByCollctionAndTokenId.status !== 2) {
         const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.token_address + "/" + i.token_id
         const day = parseInt(i.lease_term / 24 / 3600)
         const hour = parseInt(i.lease_term / 3600) % 24
@@ -76,7 +76,7 @@ const CardNative = ({ currentAccount }) => {
 
   return (
     <>
-      <div className="w-screen mt-12 pt-12 px-5 overflow-y-auto flex flex-wrap ">
+      <div className="w-screen py-16 overflow-y-auto flex flex-wrap ">
         {nfts && nfts.map(nft => (
           <div key={`${nft.token_id} ${nft.token_address}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
             <div className="w-full m-auto">
@@ -108,7 +108,7 @@ const CardNative = ({ currentAccount }) => {
                     <div className="flex justify-between ">
                       <div>
                         {nft.status == 1 &&
-                          <div class="badge badge-info h-6 gap-2 ">
+                          <div class="badge badge-info h-6 gap-2 text-[#14a452] border-0">
                             <span class=" w-2.5 h-2.5 bg-green-600 rounded-full flex items-center justify-center ">
                               <div class="w-2.5 h-2.5 animate-ping bg-green-600/75 rounded-full "></div>
                             </span>
