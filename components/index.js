@@ -9,3 +9,4 @@ export {default as CardLeasedIn} from './CardLeasedIn';
 export {default as CardLeasedOut} from './CardLeasedOut';
 export {default as ModalLeasedIn} from './ModalLeasedIn';
 export {default as ModalLeasedOut} from './ModalLeasedOut';
+export {default as SkeletonCard} from './SkeletonCard';

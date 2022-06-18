@@ -1,5 +1,5 @@
 import Head from "next/head"
-import { Nav, Footer, ModalMarket } from "../components";
+import { Nav, Footer, ModalMarket, SkeletonCard } from "../components";
 import React, { useEffect, useState } from "react";
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { ethers } from 'ethers'
@@ -13,7 +13,15 @@ const Market = () => {
 	const [nfts, setNfts] = useState([]);
 	const [cardInfo, setcardInfo] = useState();
 	const [currentAccount, setCurrentAccount] = useState("");
+	const [loading, setLoading] = useState(true);
 
+	useEffect(() => {
+		if (!nfts) return
+		setTimeout(async () => {
+			setLoading(false)
+		}, 3000)
+		console.log("nfts,", nfts)
+	}, [nfts])
 
 	useEffect(() => {
 		fetchWeb3Items();
@@ -81,14 +89,21 @@ const Market = () => {
 			{/* px-28 pt-28 md:px-56 md:py-8 lg:px-96 lg:py-16 */}
 			{/* bg-[#303339] flex-auto w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer */}
 			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
-
-			<div className="w-screen mt-0 pt-4 px-5 overflow-y-auto flex flex-wrap ">
+			<div className="w-screen h-mt-0 pt-4 px-5 overflow-y-auto flex flex-wrap ">
+				{loading &&
+					<> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> </>
+				}
+				{(!loading && nfts.length == 0) &&
+					<div className='h-96 w-full flex justify-center items-center font-BADABB text-5xl'>
+						<div className='bg-white py-16 px-32'>nothing</div>
+					</div>
+				}
 				{nfts && nfts.map(nft => (
 					<div key={`${nft.tokenId} ${nft.collection}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
 						<div className="w-full m-auto">
 							<div className="max-full bg-white m-1 mb-16 rounded-3xl hover:shadow-2xl items-center border-[1px] border-[#00000025] hover:cursor-default cursor-default">
-								<div className="card-wrap relative m-auto outline-none hover:cursor-default " >
-									<div className="h-full py-3 flex flex-col">
+								<div className="card-wrap py-3 relative m-auto outline-none hover:cursor-default " >
+									<div className="h-full flex flex-col">
 										<div className="text-center px-2">
 											<div className="flex justify-center ">
 												<p className="  text-black text-xl font-bold truncate">
@@ -116,7 +131,7 @@ const Market = () => {
 											</a>
 										</div>
 									</div>
-									<div className="px-6 relative mt-2">
+									<div className="px-6 relative ">
 										<div className="block pb-2">
 											<p className="text-gray-800 text-xs">
 												Collateral </p>
@@ -124,8 +139,8 @@ const Market = () => {
 												<div className="flex items-baseline space-x-1">
 													<div className="truncate leading-normal">{nft.collateral_eth}</div>
 													<img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
-													<div className="text-xs text-gray-500 truncate">
-														~ $83.15</div>
+													{/* <div className="text-xs text-gray-500 truncate">
+														~ $83.15</div> */}
 												</div>
 											</div>
 										</div>
@@ -146,20 +161,20 @@ const Market = () => {
 											<p className="text-gray-800 text-xs">
 												Lease term </p>
 											<div className="text-gray-700 text-2xl">
-												<div className="flex items-baseline space-x-1">
-													<div className="font-mono truncate leading-normal text-lg">{nft.day}</div>
-													<div className="font-mono text-sm">days</div>
-													<div className="font-mono truncate leading-normal text-lg">{nft.hour}</div>
-													<div className="font-mono text-sm">hours</div>
-													<div className="font-mono truncate leading-normal text-lg">{nft.min}</div>
-													<div className="font-mono text-sm">mins</div>
+												<div className="flex items-baseline space-x-1 font-mono">
+													<div className="truncate leading-normal text-lg">{nft.day}</div>
+													<div className="text-sm">days</div>
+													<div className="truncate leading-normal text-lg">{nft.hour}</div>
+													<div className="text-sm">hours</div>
+													<div className="truncate leading-normal text-lg">{nft.min}</div>
+													<div className="text-sm">mins</div>
 												</div>
 											</div>
 										</div>
-										<div className="flex justify-end p-3 md:items-baseline">
+										<div className="flex justify-end px-3 md:items-baseline">
 											{/* <p className="font-bold text-black cursor-pointer hover:opacity-80 text-base md:text-base mb-1 md:mb-0">
 												Buy Now</p> */}
-											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:bg-secondary">
+											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button border-none hover:bg-secondary">
 												Lease In
 											</label>
 										</div>

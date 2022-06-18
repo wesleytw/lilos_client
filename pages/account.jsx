@@ -19,8 +19,8 @@ const Account = () => {
 			{/* bg-[#303339] flex-auto w-[14rem] h-[22rem] my-10 mx-5 rounded-2xl overflow-hidden cursor-pointer */}
 			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
 
-			<div className=' py-2 flex items-center justify-center w-full fixed top-15 z-40'>
-				<div className=" flex justify-center items-center sticky top-0 py-2  bg-black rounded-lg">
+			<div className=' py-2 flex items-center justify-center w-full fixed top-15 z-40 '>
+				<div className=" flex justify-center items-center sticky top-0 py-2  bg-black rounded-lg shadow-lg shadow-[#241b1b57]">
 					<button className={"btn mx-2 font-BADABB text-xl tracking-widest "
 						+ (tabState == "native" ? ' ' : ' btn-primary hover:btn-accent')}
 						onClick={() => setTabState("native")}>

@@ -59,7 +59,6 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
     const collateralHex = ethers.utils.parseUnits(collateral.toString(), 'ether')
     const rentHex = ethers.utils.parseUnits(rent.toString(), 'ether')
     const leaseTermHex = ethers.BigNumber.from(leaseTerm)
-    // const leaseTermHex = ethers.utils.parseUnits(leaseTerm.toString(), 'wei')
     if (!isApprovedForAll) {
       try {
         setBtnState("approving")
@@ -72,7 +71,6 @@ const ModalNative = ({ cardInfo, currentAccount }) => {
         await transaction.wait()
         console.log("listed")
         setBtnState("listed")
-        // window.location.reload()
       } catch (error) {
         setBtnState("list")
         alert(error)

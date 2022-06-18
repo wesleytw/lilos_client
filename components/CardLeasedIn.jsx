@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ModalLeasedIn } from ".";
+import { ModalLeasedIn, SkeletonCard } from ".";
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { fetchUrl, resolveImg } from '../src/utils/fetchUrl'
 import { MdOutlineVerified } from "react-icons/md";
@@ -13,6 +13,14 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 	const [nfts, setNfts] = useState([]);
 	const [cardInfo, setcardInfo] = useState();
 	const nftsData = []
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		if (!nfts) return
+		setTimeout(async () => {
+			setLoading(false)
+		}, 3000)
+	}, [nfts])
 
 	useEffect(() => {
 		if (!currentAccount) return
@@ -23,6 +31,7 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 		const provider = new ethers.providers.InfuraProvider('rinkeby', "fed1ef26af5648de8dea5d37316687db");
 		const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
 		const getItemsByLessee = await marketContract.getItemsByLessee(currentAccount)
+		const getTime = await marketContract.getTime()
 		await Promise.all(getItemsByLessee?.map(async i => {
 			if (i.status == 2) {
 				const tokenContract = new ethers.Contract(i.collection, erc721.abi, provider)
@@ -52,9 +61,10 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 					day: day,
 					hour: hour,
 					min: min,
-					lease_start_date: i.lease_start_date.toNumber(),
-					lease_end_date: i.lease_end_date.toNumber(),
-					openseaLink: openseaLink
+					lease_start_date: i.lease_start_date.toNumber() * 1000,
+					lease_end_date: i.lease_end_date.toNumber() * 1000,
+					openseaLink: openseaLink,
+					getTime: getTime.toNumber() * 1000 //normal(java) timestamp is in milliseconds, but block.timestamp is in seconds.
 				}
 				nftsData.push(item)
 			}
@@ -71,7 +81,15 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 	}
 	return (
 		<>
-      <div className="w-screen py-16 overflow-y-auto flex flex-wrap ">
+			<div className="w-screen py-16 px-5 overflow-y-auto flex flex-wrap ">
+				{loading &&
+					<> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> </>
+				}
+				{(!loading && nfts.length == 0) &&
+					<div className='h-96 w-full flex justify-center items-center font-BADABB text-5xl'>
+						<div className='bg-white py-16 px-32'>nothing</div>
+					</div>
+				}
 				{nfts && nfts.map(nft => (
 					<div key={`${nft.tokenId} ${nft.collection}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
 						<div className="w-full m-auto">
@@ -105,7 +123,7 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 											</a>
 										</div>
 									</div>
-									<div className="px-6 relative mt-2">
+									<div className="px-6 relative ">
 										<div className="block pb-2">
 											<p className="text-gray-800 text-xs">
 												Collateral </p>
@@ -113,8 +131,8 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 												<div className="flex items-baseline space-x-1">
 													<div className="truncate leading-normal">{nft.collateral_eth}</div>
 													<img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
-													<div className="text-xs text-gray-500 truncate">
-														~ $83.15</div>
+													{/* <div className="text-xs text-gray-500 truncate">
+														~ $83.15</div> */}
 												</div>
 											</div>
 										</div>
@@ -145,7 +163,23 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 												</div>
 											</div>
 										</div>
-										<div className="flex justify-end p-3 md:items-baseline">
+										<div className="flex justify-between py-3 ">
+											{nft.lease_end_date > nft.getTime &&
+												<div class="badge badge-info h-6 gap-2 border-0 text-[#14a452]">
+													<span class=" w-2.5 h-2.5 bg-green-600 rounded-full flex items-center justify-center ">
+														<div class="w-2.5 h-2.5 animate-ping bg-green-600/75 rounded-full "></div>
+													</span>
+                            on going
+                          </div>
+											}
+											{nft.lease_end_date < nft.getTime &&
+												<div class="badge badge-error h-6 gap-2 border-0 text-[#f31260]">
+													<span class=" w-2.5 h-2.5 bg-red-600 rounded-full flex items-center justify-center ">
+														<div class="w-2.5 h-2.5 animate-ping bg-red-600/75 rounded-full "></div>
+													</span>
+                            expired
+                          </div>
+											}
 											<label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="btn btn-sm text-white btn-primary normal-case modal-button mb-1 border-none hover:bg-secondary">
 												Repay
 											</label>
@@ -158,7 +192,6 @@ const CardLeasedIn = ({ data, currentAccount }) => {
 					</div>
 				))}
 			</div>
-			{console.log(cardInfo)}
 			<ModalLeasedIn cardInfo={cardInfo} currentAccount={currentAccount} />
 		</>
 	)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ModalNative } from "../components";
+import { ModalNative, SkeletonCard } from "../components";
 import { shortenAddress } from "../src/utils/shortenAddress";
 import { MdOutlineVerified } from "react-icons/md";
 import { useNFTBalances } from "react-moralis";
@@ -12,6 +12,15 @@ const CardNative = ({ currentAccount }) => {
   const [nfts, setNfts] = useState([]);
   const nftsData = []
   const [cardInfo, setcardInfo] = useState();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!nfts) return
+    setTimeout(async () => {
+      setLoading(false)
+    }, 3000)
+  }, [nfts])
+
   useEffect(() => {
     if (!currentAccount) return
     getNFTBalances({
@@ -32,7 +41,6 @@ const CardNative = ({ currentAccount }) => {
     const marketContract = new ethers.Contract(marketAddress, market.abi, provider)
     await Promise.all(data?.result.map(async i => {
       const getItemByCollctionAndTokenId = await marketContract.getItemByCollctionAndTokenId(i.token_address, i.token_id)
-      // if (getItemByCollctionAndTokenId.status !== 2 && i.contract_type == "ERC721") {
       if (i.contract_type == "ERC721" && getItemByCollctionAndTokenId.status !== 2) {
         const openseaLink = "https://testnets.opensea.io/assets/rinkeby/" + i.token_address + "/" + i.token_id
         const day = parseInt(i.lease_term / 24 / 3600)
@@ -76,11 +84,20 @@ const CardNative = ({ currentAccount }) => {
 
   return (
     <>
-      <div className="w-screen py-16 overflow-y-auto flex flex-wrap ">
+      <div className="w-screen py-20 px-5 overflow-y-auto flex flex-wrap ">
+        {loading &&
+          <> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> <SkeletonCard /> </>
+        }
+        {(!loading && nfts.length == 0) &&
+					<div className='h-96 w-full flex justify-center items-center font-BADABB text-5xl'>
+						<div className='bg-white py-16 px-32'>nothing</div>
+					</div>
+				}
         {nfts && nfts.map(nft => (
           <div key={`${nft.token_id} ${nft.token_address}`} className="w-full md:w-1/3 lg:w-1/4 p-4 flex-shrink-0 relative">
+            {/* <label htmlFor="my-modal-4" onClick={() => setcardInfo(nft)} className="text-white normal-case modal-button mb-1 border-none hover:btn-secondary"> */}
             <div className="w-full m-auto">
-              <div className="max-full bg-white m-1 mb-16 rounded-3xl hover:shadow-2xl items-center border-[1px] border-slate-200">
+              <div className="max-full bg-white m-1 mb-8 rounded-3xl hover:shadow-2xl items-center border-[1px] border-slate-200">
                 <div className="card-wrap relative m-auto outline-none " >
                   <div className="h-full py-3 flex flex-col">
                     <div className="text-center px-2">
@@ -104,7 +121,7 @@ const CardNative = ({ currentAccount }) => {
                     {/* <p className="leading-normal text-gray-700 flex-wrap truncate">{`${shortenAddress(nft.owner_of)}`}</p> */}
                     {/* </div> */}
                   </div>
-                  <div className="px-5 pb-3 mt-1">
+                  <div className="px-11 pb-3 mt-1">
                     <div className="flex justify-between ">
                       <div>
                         {nft.status == 1 &&
@@ -125,6 +142,7 @@ const CardNative = ({ currentAccount }) => {
                 {/* </div> */}
               </div>
             </div>
+            {/* </label> */}
           </div>
         ))}
       </div>

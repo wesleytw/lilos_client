@@ -11,6 +11,8 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
   const [signer, setSinger] = useState();
   const [error, setError] = useState("");
   const [btnState, setBtnState] = useState("");
+  let lease_start_date = new Date(cardInfo?.lease_start_date).toString()
+  let lease_end_date = new Date(cardInfo?.lease_end_date).toString()
 
   const connectWallet = async () => {
     try {
@@ -119,8 +121,8 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
                       <div className="flex items-baseline space-x-1">
                         <div className="truncate leading-normal">{cardInfo?.collateral_eth}</div>
                         <img className='h-4' src="https://openseauserdata.com/files/6f8e2979d428180222796ff4a33ab929.svg"></img>
-                        <div className="text-xs text-gray-500 truncate">
-                          ~ $83.15</div>
+                        {/* <div className="text-xs text-gray-500 truncate">
+                          ~ $83.15</div> */}
                       </div>
                     </div>
                   </div>
@@ -140,26 +142,23 @@ const ModalLeasedIn = ({ cardInfo, currentAccount }) => {
 										</div> */}
                     </div>
                   </div>
-                  <div className="pb-2">
-                    <p className="text-gray-800 text-sm">
-                      Lease term </p>
-                    <p className="text-gray-800 text-sm">
-                      Lease term </p>
-                    <p className="text-gray-800 text-sm">
-                      Lease term </p>
-                    <p className="text-gray-800 text-sm">
-                      Lease term </p>
-                    <div className="text-gray-700 text-2xl">
-                      <div className="flex items-baseline space-x-1">
-                        <div className="font-mono truncate leading-normal text-lg">{cardInfo?.day}</div>
-                        <div className="font-mono text-sm">days</div>
-                        <div className="font-mono truncate leading-normal text-lg">{cardInfo?.hour}</div>
-                        <div className="font-mono text-sm">hours</div>
-                        <div className="font-mono truncate leading-normal text-lg">{cardInfo?.min}</div>
-                        <div className="font-mono text-sm">mins</div>
+                  {lease_start_date &&
+                    <div className=' p-1 flex flex-col items-center justify-center font-serif rounded-lg border-2 border-black text-black text-center  text-sm'>
+                      <div className=" pt-1 ">
+                        <p>Lease Start Date</p>
+                        <div className="pt-1 flex items-baseline space-x-1 font-mono">
+                          <div className=" leading-normal text-xs overflow-auto">{lease_start_date}</div>
+                        </div>
+                      </div>
+                      <div className=" w-11/12 border-[#717271cc] border-t"></div>
+                      <div className=" pt-1 ">
+                        <p>Lease End Date</p>
+                        <div className="py-1 flex items-baseline space-x-1 font-mono">
+                          <div className=" leading-normal text-xs overflow-auto">{lease_end_date}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  }
                 </div>
               </div>
               {!signer ? (
