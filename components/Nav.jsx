@@ -77,9 +77,12 @@ const Nav = ({ currentAccount, setCurrentAccount }) => {
 							</a>
 							<ul className="p-2 bg-white shadow">
 								<li><a>nft Collateral</a></li>
-								<li><a>lilo</a></li>
+								<Link href="/lilo" >
+								<li><a>lilo transaction</a></li></Link>
 							</ul>
 						</li>
+						<li><a href="https://drive.google.com/file/d/1Ifv-WBZMqmjo6M1NBbZsmbX-damY7PXB/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+							Whitepaper</a></li>
 					</ul>
 				</div>
 				{/* hambergur */}
@@ -97,9 +100,12 @@ const Nav = ({ currentAccount, setCurrentAccount }) => {
 						</a>
 						<ul className="p-2 bg-white shadow-sm">
 							<li><a>nft Collateral</a></li>
-							<li><a>lilo</a></li>
+							<Link href="/lilo" >
+								<li><a>lilo transaction</a></li></Link>
 						</ul>
-					</li> 
+					</li>
+					<li><a href="https://drive.google.com/file/d/1Ifv-WBZMqmjo6M1NBbZsmbX-damY7PXB/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+						Whitepaper</a></li>
 				</ul>
 			</div>
 

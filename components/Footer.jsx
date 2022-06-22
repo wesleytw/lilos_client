@@ -1,7 +1,7 @@
 import React from "react"
 import { marketAddress } from '../src/constant'
 
-const etherscanLink = "https://rinkeby.etherscan.io/address/"+`${marketAddress}`+"#code";
+const etherscanLink = "https://rinkeby.etherscan.io/address/" + `${marketAddress}` + "#code";
 const Footer = () => (
   <div className="w-full flex md:justify-center justify-between items-center flex-col p-4 gradient-bg-footer">
     <div className="w-full flex sm:flex-row flex-col justify-between items-center my-4">
@@ -10,7 +10,8 @@ const Footer = () => (
           LILOS</a>
       </div>
       <div className="flex flex-1 justify-evenly items-center flex-wrap text-black text-base text-center sm:mt-0 mt-5 w-full ">
-        <p className="mx-2 cursor-pointer">White Paper</p>
+        <a href="https://drive.google.com/file/d/1Ifv-WBZMqmjo6M1NBbZsmbX-damY7PXB/view?usp=sharing" target="_blank" rel="noopener noreferrer">
+          Whitepaper</a>
         <p className="mx-2 cursor-pointer">About</p>
         <p className="mx-2 cursor-pointer">Tutorials</p>
       </div>
