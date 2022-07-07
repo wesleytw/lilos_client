@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-const corsURL = 'https://cors-anywhere.herokuapp.com/';
-
 export const fetchUrl = async (url) => {
   try {
     if (!url) {

@@ -4,10 +4,8 @@ import Head from "next/head"
 import { Nav, CardNative, CardLeasedIn, CardLeasedOut, Footer } from "../components";
 
 const Account = () => {
-	// const { getNFTBalances, data } = useNFTBalances();
 	const [currentAccount, setCurrentAccount] = useState("");
 	const [tabState, setTabState] = useState("native"); //native, leasedIn, leasedOut
-
 
 	return (
 		<>

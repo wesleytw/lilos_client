@@ -7,6 +7,7 @@ import { useState } from 'react'
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [test, settest] = useState(false);
 
   return (
     <div className="min-h-screen">
@@ -16,8 +17,8 @@ const App = () => {
       </Head>
 			<Nav currentAccount={currentAccount} setCurrentAccount={setCurrentAccount} />
       <Welcome />
+      <button className="btn" onClick={()=>settest(!test)}>{`${test}`} bbbb</button>
       <Footer />
-      
     </div>
   );
 }
